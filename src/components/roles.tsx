@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { useQuery, useMutation } from "@apollo/client/react";
 import type { AssignRoleResponse, UsersData } from "./types";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { RiErrorWarningLine } from "react-icons/ri";
 
 
@@ -73,28 +73,5 @@ export default function Roles() {
         </form>
       </div>
     </div>
-    <Toaster
-      position="top-center"
-      reverseOrder={false}
-      gutter={8}
-      containerClassName=""
-      toasterId="default"
-      toastOptions={{
-        className: 'card shadow shadow-slate-950 ring ring-red-600 bg-white',
-        duration: 3000,
-        removeDelay: 3000,
-        style: {
-          background: '#FFFFFFFF',
-          color: '#000000',
-        },
-        success: {
-          duration: 3000,
-          iconTheme: {
-            primary: 'green',
-            secondary: 'black',
-          },
-        },
-      }}
-    />
   </>
 }

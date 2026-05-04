@@ -6,8 +6,6 @@ import Login from "./components/login";
 import Register from "./components/register";
 import apolloClient from "./apolloClient";
 import Profil from "./components/profil";
-import Transaction from "./components/transaction";
-import QRScanner from "./components/scanner";
 import TypeTimbre from "./components/typeTimbre";
 import Dashboard from "./components/dashbord";
 import ProtectedRoute from "./services/guard";
@@ -15,6 +13,10 @@ import NotFound from "./components/404";
 import Roles from "./components/roles";
 import Session from "./components/session";
 import Price from "./components/pricing";
+import Notifications from "./components/notifications";
+import Forbiden from "./components/403";
+import FindTransaction from "./components/findTransaction";
+import Transaction from "./components/transaction";
 
 function App() {
   return (
@@ -41,7 +43,7 @@ function App() {
               }
             />
             <Route
-              path="/transaction/:qr"
+              path="/scan/:qr"
               element={
                 <ProtectedRoute permission="timbre.view_timbre">
                   <Transaction />
@@ -49,14 +51,14 @@ function App() {
               }
             />
             <Route
-              path="/transaction"
+              path="/scan"
               element={
                 <ProtectedRoute permission="timbre.view_timbre">
                   <Transaction />
                 </ProtectedRoute>
               }
             />
-            <Route path="/scan" element={<QRScanner />} />
+            {/* <Route path="/scan" element={<QRScanner />} /> */}
             <Route
               path="/timbre-type"
               element={
@@ -65,7 +67,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/unauthorized" element={<p>Unauthorized Access</p>} />
+            <Route path="/unauthorized" element={<Forbiden />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/404" element={<NotFound />} />
             <Route
@@ -90,6 +92,24 @@ function App() {
                 <Price />
               }
               />
+              <Route 
+                path="/notifications"
+                element={
+                  <Notifications />
+                }
+                />
+              <Route
+              path="/pricing"
+              element={
+                <Price />
+              }
+              />
+              <Route 
+                path="/transaction/:idTranction"
+                element={
+                  <FindTransaction />
+                }
+                />
           </Routes>
         </Dashboard>
       </ApolloProvider>

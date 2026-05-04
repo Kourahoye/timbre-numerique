@@ -106,7 +106,7 @@ export default function Profil() {
                             <p className="py-4 flex items-center justify-center">
                               {" "}
                               <QRCodeCanvas
-                                value={`https://swimmer-bullwhip-rearview.ngrok-free.dev/transaction/${timbre.qrCode}`}
+                                value={`https://swimmer-bullwhip-rearview.ngrok-free.dev/scan/${timbre.qrCode}`}
                                 size={256}
                               />
                             </p>

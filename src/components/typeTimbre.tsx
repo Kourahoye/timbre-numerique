@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import type { DeleteTypeMutationResponse, GetTypeTimbresQuery } from "./types";
 import { RiAddLine, RiDeleteBin6Line } from "react-icons/ri";
 import Swal from "sweetalert2";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const AddType = gql`
   mutation AddType($name: String!) {
@@ -191,15 +191,15 @@ export default function TypeTimbre() {
               </thead>
               <tbody>
                 {loading && (
-                  <tr className="text-center">
-                    <td colSpan={6}>
+                  <tr>
+                    <td className="text-center" colSpan={6}>
                       <span className="loading loading-lg loading-spinner"></span>{" "}
                     </td>
                   </tr>
                 )}
                 {called && data && data?.getTimbresType.length === 0 && (
                   <tr>
-                    <td className="text-xl" colSpan={6}>
+                    <td className="text-xl font-mono text-center font-semibold" colSpan={6}>
                       Aucun type de timbre trouvé
                     </td>
                   </tr>
@@ -231,33 +231,6 @@ export default function TypeTimbre() {
             </table>
           </div>
         </div>
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-          gutter={8}
-          containerClassName="" //the toast all the screen
-          toasterId="default"
-          toastOptions={{
-            // Define default options
-            className:
-              "card shadow shadow-slate-950 ring ring-red-600 bg-white",
-            duration: 3000,
-            removeDelay: 3000,
-            style: {
-              background: "#FFFFFFFF",
-              color: "#000000",
-            },
-
-            // Default options for specific types
-            success: {
-              duration: 3000,
-              iconTheme: {
-                primary: "green",
-                secondary: "black",
-              },
-            },
-          }}
-        />
       </div>
     </>
   );

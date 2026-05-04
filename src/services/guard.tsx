@@ -5,6 +5,7 @@ import { Navigate } from "react-router-dom";
 
 type Me = {
   id: string;
+  username:string;
   permissions?: string[];
 };
 
@@ -44,7 +45,11 @@ const ProtectedRoute = ({ children, permission }: Props) => {
 
   // ❌ pas connecté ou erreur
   if (error || !data?.me) {
+    localStorage.removeItem("me")
     return <Navigate to="/login" replace />;
+  }
+  if (data){
+    localStorage.setItem("me",data.me.username)
   }
   if(permission==null || permission == "") return <>{children}</>;
   const userPermissions = data.perms ?? [];

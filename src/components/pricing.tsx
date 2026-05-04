@@ -2,8 +2,8 @@ import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
 // import type { GetTypeTimbresQuery, Sessions } from "./types";
 import { gql } from "@apollo/client";
 import { RiAddLine, RiDeleteBin6Line, RiErrorWarningLine, RiRefreshFill } from "react-icons/ri";
-import toast, { Toaster } from "react-hot-toast";
-import type { PriceAssignation, PriceType } from "./types";
+import toast from "react-hot-toast";
+import type { PriceAssignation, PriceType, SessionType } from "./types";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
@@ -12,8 +12,7 @@ query data {
   sessions {
     id
     name
-  }
-  
+}
 }`;
 
 const GET_TYPE = gql`
@@ -97,7 +96,7 @@ export default function Price() {
     error: errorSession,
     data: sessions,
     refetch: refetchSession,
-  } = useQuery(GET_SESSION);
+  } = useQuery<{sessions:SessionType[]}>(GET_SESSION);
   const {
     loading: loadingType,
     error: errortype,
@@ -127,14 +126,24 @@ export default function Price() {
     const toastId = toast.loading("Please wait...")
     deletePrice({variables: { id: id }}).then((res) => {
         const data = res.data
-      if (data?.deletePrice.success) {
-        toast.success(data.deletePrice.message, { id:toastId })
-      } else {
-        toast.error(data.deletePrice.message, { id:toastId })
-      }
+        if (data){
+          if (data.deletePrice.success == true) {
+            toast.success(data.deletePrice.message, { id:toastId })
+          } else {
+            toast.error(data.deletePrice.message, { id:toastId })
+          }
+        }else if (res.error){      
+          toast.error(res.error.message, { id:toastId })
+        }else{
+          console.log(res)
+        }
       refetchPrices();
       if (called) refetchAllPrices();
-    }).catch((res) => {
+    }).catch((error) => {
+      if(error){
+        toast.error(error.message,{id: toastId});
+        return
+      }
       toast.error("Erreur imprevue!",{id: toastId});
     });
   })
@@ -262,7 +271,6 @@ export default function Price() {
               <div className="form-control w-full">
                 <label className="label">
                   <span className="label-text">Prix</span>
-                  <span className="label-text-alt"></span>
                 </label>
                 <input
                   type="number"
@@ -271,10 +279,6 @@ export default function Price() {
                   required
                   className="input input-bordered w-full"
                 />
-                <label className="label">
-                  <span className="label-text-alt"></span>
-                  <span className="label-text-alt"></span>
-                </label>
               </div>
               <button
                 type="submit"
@@ -341,8 +345,8 @@ export default function Price() {
               </thead>
               <tbody>
                 {loadingPrices && (
-                  <tr className="text-center">
-                    <td colSpan={9}>
+                  <tr>
+                    <td className="text-center" colSpan={9}>
                       <span className="loading loading-lg loading-spinner"></span>{" "}
                     </td>
                   </tr>
@@ -420,8 +424,8 @@ export default function Price() {
                     </tr>
                 }
                 {loadingAll && (
-                  <tr className="text-center">
-                    <td colSpan={9}>
+                  <tr>
+                    <td className="text-center" colSpan={9}>
                       <span className="loading loading-lg loading-spinner"></span>{" "}
                     </td>
                   </tr>
@@ -473,33 +477,6 @@ export default function Price() {
             </div>
           </div>
         </div>
-      
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        gutter={8}
-        containerClassName="" //the toast all the screen
-        toasterId="default"
-        toastOptions={{
-          // Define default options
-          className: "card shadow shadow-slate-950 ring ring-red-600 bg-white",
-          duration: 3000,
-          removeDelay: 3000,
-          style: {
-            background: "#FFFFFFFF",
-            color: "#000000",
-          },
-
-          // Default options for specific types
-          success: {
-            duration: 3000,
-            iconTheme: {
-              primary: "green",
-              secondary: "black",
-            },
-          },
-        }}
-      />
     </>
   );
 }

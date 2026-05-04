@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client/react";
 import toast from "react-hot-toast";
-import { Toaster } from "react-hot-toast";
 import { storeTokens } from "../services/manageTokens";
 import { LOGIN_MUTATION } from "../graphql/mutations";
 
@@ -108,30 +107,6 @@ export default function Login() {
           </a>
         </p>
       </div>
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        gutter={8}
-        containerClassName="" //the toast all the screen
-        toasterId="default"
-        toastOptions={{
-          // Define default options
-          className: "card shadow shadow-slate-950 ring ring-red-600 bg-white",
-          duration: 3000,
-          removeDelay: 3000,
-          style: {
-            background: "#FFFFFFFF",
-            color: "#000000",
-          },
-          success: {
-            duration: 3000,
-            iconTheme: {
-              primary: "green",
-              secondary: "black",
-            },
-          },
-        }}
-      />
     </div>
   );
 }
