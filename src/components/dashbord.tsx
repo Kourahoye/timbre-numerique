@@ -5,6 +5,8 @@ import  { Toaster } from "react-hot-toast";
 import { RiNotification4Fill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import apolloClient from "../apolloClient";
+import { useAuth } from "./auth";
+import { Can } from "./can";
 
 const GET_NOTIFS =gql`
   query GET_NOTIFS {
@@ -24,7 +26,8 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
      const [loadNotifs, {data}] = useLazyQuery<{newNotisCount:number}>(GET_NOTIFS);
      const [me,setMe]  =  useState(localStorage.getItem("me"))
      const [logout] = useMutation(LOGOUT)
-     let navigate = useNavigate()
+     const navigate = useNavigate()
+     const { hasPermission } = useAuth();
     //  const mode =  localStorage.getItem("mode")
     const logoutfunc = ()=>{
         logout({variables:{refreshToken:localStorage.getItem("refresh")}}).then(()=>{
@@ -70,7 +73,11 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
             <li><Link to="/roles">Gesion des Roles</Link></li> 
           </ul>
         </li>
-        <li><Link to="/sessions" >Sessions</Link></li>
+        
+        
+      {hasPermission("add_session" ) == true && (<li><Link to="/sessions" >Sessions</Link></li>)}  
+      
+      <li><Link to="/sessions" >Sessions</Link></li>
       <li><Link to="/timbre-type" >Timbre Type</Link></li>
       <li><Link to="/scan" >Timbre</Link></li>
       <li><Link to="/pricing" >Pricing</Link></li>
@@ -108,6 +115,11 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           </ul>
         </details>
       </li>
+      <Can permission="add_session">
+        <li>
+          <button className="btn-wide btn-warning">Créer</button>
+          </li>
+      </Can>
       <li><Link to="/sessions" >Sessions</Link></li>
       <li><Link to="/timbre-type" >Timbre Type</Link></li>
       <li><Link to="/scan" >Timbre</Link></li>

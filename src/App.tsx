@@ -18,11 +18,14 @@ import Forbiden from "./components/403";
 import FindTransaction from "./components/findTransaction";
 import Transaction from "./components/transaction";
 import MyTransactions from "./components/myTransactions";
+import { AuthProvider } from "./components/auth";
 
 function App() {
   return (
     <>
       <ApolloProvider client={apolloClient}>
+        <AuthProvider>
+
         <Dashboard>
           <Routes>
             <Route
@@ -129,6 +132,7 @@ function App() {
                 />
           </Routes>
         </Dashboard>
+          </AuthProvider>
       </ApolloProvider>
     </>
   );
