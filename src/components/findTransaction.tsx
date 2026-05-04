@@ -98,7 +98,6 @@ export default function FindTransaction(){
         .then((res) => {
           const data =res.data 
           if(data){
-
               if (data.endTransactions.success) {
                   toast.success(data.endTransactions.message, { id: toastId });
                 } else {

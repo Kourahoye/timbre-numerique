@@ -8,7 +8,7 @@ import type {
 } from "./types";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
-import { RiAddLine, RiDeleteBin6Line } from "react-icons/ri";
+import { RiAddLine, RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import Swal from "sweetalert2";
 
 const ADD_SESSION = gql`
@@ -54,14 +54,32 @@ const TOOGLE_ACTIVE_SESSION = gql`
     }
   }
 `;
+const CHANGE_SESSION_NAME = gql`
+mutation CHANGE_SESSION_NAME($id:Int!,$name:String!) {
+  changeSessionName(id: $id, name: $name) {
+    id
+    name
+  }
+}
+`;
+const CHANGE_SESSION_DATE = gql`
+mutation CHANGE_SESSION_DATE($id:Int!,$start:Date!,$end:Date!) {
+  changeSessionDate(end: $end, id: $id, start: $start) {
+    id
+    name
+  }
+}
+`;
 export default function Session() {
   const [addsession, { loading: adding }] = useMutation(ADD_SESSION);
   const [error, setError] = useState("");
-  const [loadSessions, { called, loading, data, refetch }] =
-    useLazyQuery<Sessions>(ALL_SESSIONS);
+  const [loadSessions, { called, loading, data, refetch }] =useLazyQuery<Sessions>(ALL_SESSIONS);
   const [deleteSession] = useMutation(DELETE_SESSION);
   const [toogleSession] = useMutation(TOOGLE_ACTIVE_SESSION);
+  const [changeName,{loading:changingName}] = useMutation(CHANGE_SESSION_NAME);
+  const [changeDates,{loading:changingDates}] = useMutation(CHANGE_SESSION_DATE);
 
+  const [currId,setCurrId]=useState<number|null>()
   useEffect(() => {
     loadSessions();
   }, []);
@@ -277,6 +295,106 @@ export default function Session() {
             </div>
           </div>
         </dialog>
+        <dialog id="update_session" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Modification!</h3>
+            <div className="py-4">
+              <form method="post" className="space-x-2 space-y-2 flex justify-between" onSubmit={(e)=>{
+                e.preventDefault()
+                if(!currId){
+                  toast.error("Selectionez la session à modifier")
+                  return
+                }
+                const form = new FormData(e.currentTarget)
+                const name = form.get("new_name") 
+                if (name == "" || name == null){
+                  toast.error("Donnez le nouveau nom")
+                }
+                const toastId = toast.loading("Please wait...")
+                changeName({variables:{id:currId,name:name}}).then((res)=>{
+                  if(res.data){
+                    toast.success("Changement effectuer",{id:toastId})
+                    refetch()
+                    return
+                  }
+                  if(res.error){
+                    toast.error(res.error.message,{id:toastId})
+                  }
+                }).catch((error)=>{
+                  if(error.message){
+                    toast.error(error.message,{id:toastId})
+                  }
+                })
+              }}>
+                <input type="text" placeholder="new name" required name="new_name" className="input input-sm w-full" />
+                <button className='btn btn-sm btn-outline btn-ghost btn-info'><span>Changer</span>
+                {
+                  changingName && <span className="loading loading-spinner loading-xs"></span>
+                }
+                </button>
+              </form>
+              <div className="divider">Default</div>
+                <form  method="post" className="space-y-2" onSubmit={(e)=>{
+                  e.preventDefault()
+                  const form = new FormData(e.currentTarget)
+                  const start =  form.get("new_start")
+                  const end =  form.get("new_end")
+                  if (start == null || start == "" || end==null || end==""){
+                    toast.error("Remplissez les champs")
+                    return;
+                  }if(start > end){
+                    toast.error("La date de debut doit venir avant la date de fin")
+                    return;
+                  }
+                  const toastId = toast.loading("Please wait...")
+                    changeDates({variables:{id:currId,start:start,end:end}}).then((res)=>{
+                      if(res.data){
+                        toast.success("Changement effectuer",{id:toastId})
+                        refetch()
+                        return
+                      }
+                      if(res.error){
+                        toast.error(res.error.message,{id:toastId})
+                      }
+                    }).catch((error)=>{
+                      if(error.message){
+                        toast.error(error.message,{id:toastId})
+                      }
+                    })
+                }}>
+                  <div className="form-control w-full ">
+                    <label className="label">
+                      <span className="label-text">Start date</span>
+                    </label>
+                    <input type="date" placeholder="Type here" name="new_start" required className="input input-bordered w-full validator" />
+                    <p className="validator-hint">Must be 2025</p>
+                  </div>
+                  <div className="form-control w-full ">
+                    <label className="label">
+                      <span className="label-text">End date</span>
+                    </label>
+                    <input type="date" placeholder="Type here" name="new_end" required className="input validator input-bordered w-full " />
+                    <p className="validator-hint">Ce champ est requis</p>
+                  </div>
+                  <div>
+                  </div>
+                  <button className='btn btn-sm btn-outline btn-ghost btn-info'>
+                    <span>
+                      Changer
+                    </span>
+                    {
+                      changingDates && <span className="loading loading-spinner loading-sm"></span>
+                    }
+                  </button>
+                </form>
+            </div>
+            <div className="modal-action">
+              <form method="dialog">
+                <button className="btn">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
         <div className="card bg-base-100 shadow-xl p-6 ml-4">
           <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
             <span>Sessions</span>
@@ -300,6 +418,8 @@ export default function Session() {
                 <tr>
                   <th>#</th>
                   <th>Name</th>
+                  <th>Debut</th>
+                  <th>Fin</th>
                   <th>Active</th>
                   <th>Created_at</th>
                   <th>updated_at</th>
@@ -329,6 +449,12 @@ export default function Session() {
                     <tr key={session.id} className="mb-2">
                       <td>{session.id}</td>
                       <td>{session.name}</td>
+                      <td>
+                        {new Date(session.startDate).toLocaleDateString()}
+                      </td>
+                      <td>
+                        {new Date(session.endDate).toLocaleDateString()}
+                      </td>
                       <td className="text-center">
                         <input
                           type="checkbox"
@@ -350,7 +476,7 @@ export default function Session() {
                       </td>
                       <td>{session.createdBy.username}</td>
                       <td>{session.updatedBy.username}</td>
-                      <td>
+                      <td className="space-x-2">
                         <button
                           className="btn btn-sm btn-error btn-outline btn-ghost"
                           onClick={() => {
@@ -361,7 +487,15 @@ export default function Session() {
                             size={20}
                             className="text-error cursor-pointer"
                           />
-                        </button>
+                            </button>
+                        <button className="btn btn-sm btn-warning btn-outline btn-ghost" onClick={() => {
+                          setCurrId(Number.parseInt(session.id));
+                          (
+                            document.getElementById(
+                              "update_session",
+                            ) as HTMLDialogElement | null
+                          )?.showModal();
+                        }} ><RiEditLine /> </button>
                       </td>
                     </tr>
                   ))}

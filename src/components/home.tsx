@@ -42,7 +42,7 @@ function Home() {
 
   return (
     <>
-      <div className="hero min-h-full bg-base-200">
+      <div className="hero h-screen bg-base-200">
         <div className="hero-content text-center">
           <div className="w-full">
             <h1 className="text-5xl font-bold">Get your timbre</h1>

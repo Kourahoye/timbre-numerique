@@ -80,8 +80,8 @@ export type SessionType ={
       id: string
       name: string
       active:boolean
-      start_date: string
-      end_date: string
+      startDate: string
+      endDate: string
       createdAt: string
       updatedAt: string
       createdBy: User

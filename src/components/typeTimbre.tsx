@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useMutation, useLazyQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import type { DeleteTypeMutationResponse, GetTypeTimbresQuery } from "./types";
-import { RiAddLine, RiDeleteBin6Line } from "react-icons/ri";
+import { RiAddLine, RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 
@@ -38,14 +38,23 @@ const DELETE_TYPE = gql`
     }
   }
 `;
+const CHANGE_TYPE_NAME = gql`
+mutation CHANGE_TYPE_NAME {
+  changeTimbreTypeName(id: 10, name: "") {
+    id
+    name
+  }
+}
+`;
+
 export default function TypeTimbre() {
   const [error, setError] = useState("");
   const [addType, { loading: load }] = useMutation(AddType);
   const [name, setName] = useState("");
-  const [loadTypeTimbre, { called, loading, data, refetch }] =
-    useLazyQuery<GetTypeTimbresQuery>(GET_TYPE_TIMBRES);
+  const [loadTypeTimbre, { called, loading, data, refetch }] = useLazyQuery<GetTypeTimbresQuery>(GET_TYPE_TIMBRES);
   const [deleteTimbreType] = useMutation(DELETE_TYPE);
-
+  const [currId,setCurrId]=useState<number|null>()
+  const [changeName,{loading:changingName}] = useMutation(CHANGE_TYPE_NAME);
   const deleteType = (id: number) => {
     Swal.fire({
       title: "Are you sure?",
@@ -82,6 +91,58 @@ export default function TypeTimbre() {
   return (
     <>
       <div className="min-h-screen flex flex-col gap-4 justify-center items-center bg-base-200 w-full">
+        <dialog id="update_type_timbre" className="modal">
+          <div className="modal-box">
+            <form method="dialog">
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 className="font-bold text-lg">Modifier le type de timbre</h3>
+            <p className="py-4">
+              <form method="post" 
+              className="flex justify-between items-center space-x-2"
+              onSubmit={(e)=>{
+                e.preventDefault()
+                e.preventDefault()
+                if(!currId){
+                  toast.error("Selectionez le type à modifier")
+                  return
+                }
+                const form = new FormData(e.currentTarget)
+                const name = form.get("new_name") 
+                if (name == "" || name == null){
+                  toast.error("Donnez le nouveau nom")
+                }
+                const toastId = toast.loading("Please wait...")
+                changeName({variables:{id:currId,name:name}}).then((res)=>{
+                  if(res.data){
+                    toast.success("Changement effectuer",{id:toastId})
+                    refetch()
+                    return
+                  }
+                  if(res.error){
+                    toast.error(res.error.message,{id:toastId})
+                  }
+                }).catch((error)=>{
+                  if(error.message){
+                    toast.error(error.message,{id:toastId})
+                  }
+                })
+              }}
+              >
+                <div className="form-control w-full">
+                  <input type="text" placeholder="Type here" name="new_name" required className="input input-sm validator input-bordered w-full" />
+                </div>
+                <button className="btn btn-info btn-outline btn-ghost btn-sm" type="submit">
+                  <span>Modifier</span>
+                  {
+                    changingName && <span className="loading loading-spinner loading-sm"></span>
+                  }
+                </button>
+              </form>
+
+            </p>
+          </div>
+        </dialog>
         <dialog id="add_modal" className="modal">
           <div className="modal-box">
             <form method="dialog">
@@ -214,7 +275,7 @@ export default function TypeTimbre() {
                       <td>{new Date(type.updatedAt).toLocaleDateString()}</td>
                       <td>{type.createdBy.username}</td>
                       <td>{type.updatedBy.username}</td>
-                      <td>
+                      <td className="space-x-2">
                         <button
                           className="btn btn-sm btn-error btn-outline btn-ghost"
                           onClick={() => deleteType(Number.parseInt(type.id))}
@@ -224,6 +285,14 @@ export default function TypeTimbre() {
                             className="text-error cursor-pointer"
                           />
                         </button>
+                         <button className="btn btn-sm btn-warning btn-outline btn-ghost" onClick={() => {
+                          setCurrId(Number.parseInt(type.id));
+                           (
+                               document.getElementById(
+                               "update_type_timbre",
+                           ) as HTMLDialogElement | null
+                           )?.showModal();
+                          }} ><RiEditLine /> </button>
                       </td>
                     </tr>
                   ))}

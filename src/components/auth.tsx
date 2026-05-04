@@ -32,7 +32,7 @@ const ME_WITH_PERMS_QUERY = gql`
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { data, loading } = useQuery(ME_WITH_PERMS_QUERY, {
+  const { data, loading } = useQuery<AuthContextType>(ME_WITH_PERMS_QUERY, {
     fetchPolicy: "cache-first",
     nextFetchPolicy: "cache-only",
   });

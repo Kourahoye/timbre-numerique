@@ -1,18 +1,13 @@
 import { gql } from "@apollo/client";
-import { useLazyQuery, useMutation } from "@apollo/client/react";
-import { useEffect, useState } from "react";
+import { useMutation } from "@apollo/client/react";
 import  { Toaster } from "react-hot-toast";
-import { RiNotification4Fill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import apolloClient from "../apolloClient";
-import { useAuth } from "./auth";
 import { Can } from "./can";
+import { useNotifications } from "./hooks/useNotification";
+import { useAuth } from "./auth";
 
-const GET_NOTIFS =gql`
-  query GET_NOTIFS {
-  newNotisCount
-}
-`
+
 
 const LOGOUT = gql`
 mutation RevokeToken($refreshToken: String!) {
@@ -23,28 +18,22 @@ mutation RevokeToken($refreshToken: String!) {
 }
 `
 export default function Dashboard({ children }: { children: React.ReactNode }) {
-     const [loadNotifs, {data}] = useLazyQuery<{newNotisCount:number}>(GET_NOTIFS);
-     const [me,setMe]  =  useState(localStorage.getItem("me"))
+     const { unreadCount, loading } = useNotifications();
+    //  const [me,setMe]  =  useState(localStorage.getItem("me"))
      const [logout] = useMutation(LOGOUT)
      const navigate = useNavigate()
-     const { hasPermission } = useAuth();
     //  const mode =  localStorage.getItem("mode")
+     const {me} = useAuth()
     const logoutfunc = ()=>{
         logout({variables:{refreshToken:localStorage.getItem("refresh")}}).then(()=>{
           localStorage.removeItem("access")
           localStorage.removeItem("refresh")
-          setMe("")
+          // setMe("")
           apolloClient.clearStore()
           navigate("/login")
         })
     }
-    useEffect(() => {
-
-     setInterval(() => {
-        loadNotifs()
-      }, 60000);
-  
-    }, []);
+    
 
     return <>
     <div className="navbar bg-base-100 shadow-sm">
@@ -57,44 +46,45 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
         tabIndex={-1}
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
         {
-          me && <li><Link className="btn btn-circle btn-soft btn-wide btn-outline btn-info uppercase" to="/profil">{me}</Link></li>
+          me && <li><Link className="btn btn-circle btn-soft btn-wide btn-outline btn-info uppercase" to="/profil">{me.username}</Link></li>
         }
         <li>
           <a>Authentication</a>
           <ul className="p-2">
             {
-              me != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>  :(
+              me?.username != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>  :(
                 <>
                 <li><Link to="/register">Register</Link></li>
                 <li><Link to="/login">Login</Link></li>
                 </>
               )
             }
-            <li><Link to="/roles">Gesion des Roles</Link></li> 
+             <Can permission="manage_users">
+                  <li><Link to="/roles">Gesion des Roles</Link></li>
+         </Can>
           </ul>
         </li>
-        
-        
-      {hasPermission("add_session" ) == true && (<li><Link to="/sessions" >Sessions</Link></li>)}  
-      
+      <Can permission="add_session">
       <li><Link to="/sessions" >Sessions</Link></li>
+      </Can>
+      <Can permission="add_typetimbre">
       <li><Link to="/timbre-type" >Timbre Type</Link></li>
+      </Can>
+      <Can permission="scan">
       <li><Link to="/scan" >Timbre</Link></li>
-      <li><Link to="/pricing" >Pricing</Link></li>
-      <li><Link to="/mytransactions" >Mes transactions</Link></li>
-
-      <li className="divider h-1"></li>
-     <li>
-         <label className="swap swap-rotate">
-          Theme
-       <input type="checkbox" className="theme-controller" value="Slate" />
-       <svg className="swap-on fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
-       <svg className="swap-off fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
-      </label>
-     </li>
+      </Can>
+      <Can permission="scan">
+        <li><Link to="/pricing" >Pricing</Link></li>
+      </Can>
+      
+      <Can permission="">
+          <li><Link to="/mytransactions" >Mes transactions</Link></li>
+      </Can>
+      
       </ul>
     </div>
     <Link className="btn btn-ghost text-xl font-mono" to="/">Timbre Numerique</Link>
+
   </div>
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal px-1">
@@ -104,55 +94,87 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           <summary>Authentication</summary>
           <ul className="p-2 bg-base-100 w-40 z-1">
              {
-               me != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>  :(
+               me?.username != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>  :(
                 <>
                 <li><Link to="/register">Register</Link></li>
                 <li><Link to="/login">Login</Link></li>
                 </>
               )
             }
-            <li><Link to="/roles">Gesion des Roles</Link></li>
+            <Can permission="manage_users">
+                  <li><Link to="/roles">Gesion des Roles</Link></li>
+         </Can>
           </ul>
         </details>
       </li>
       <Can permission="add_session">
-        <li>
-          <button className="btn-wide btn-warning">Créer</button>
-          </li>
-      </Can>
       <li><Link to="/sessions" >Sessions</Link></li>
+      </Can>
+      <Can permission="add_typetimbre">
       <li><Link to="/timbre-type" >Timbre Type</Link></li>
-      <li><Link to="/scan" >Timbre</Link></li>
-      <li><Link to="/pricing" >Pricing</Link></li>
-      <li><Link to="/mytransactions" >Mes transactions</Link></li>
+      </Can>
+      <Can permission="scan">
+      <li><Link to="/scan" >Consomer Timbre</Link></li>
+      </Can>
+      <Can permission="scan">
+        <li><Link to="/pricing" >Pricing</Link></li>
+      </Can>
+      
+     {
+      me &&
+          <li><Link to="/mytransactions" >Mes transactions</Link></li>
+     }
+      
       
      
     </ul>
   </div>
   <div className="navbar-end">
-    <label className="not-lg:hidden swap swap-rotate">
-      {/* this hidden checkbox controls the state */}
-      <input type="checkbox" className="theme-controller" value="dark" />
-      {/* sun icon */}
-      <svg className="swap-on fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
-      {/* moon icon */}
-      <svg className="swap-off fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
-    </label>
+   <label className="toggle text-base-content">
+  <input type="checkbox" value="Slate" className="theme-controller" />
+  <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
+  <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>
+</label>
+    <button className="btn btn-ghost btn-circle ml-1">
     <div className="indicator">
-      {data && data.newNotisCount.toString() != "0" &&
-      <span className="indicator-item badge badge-xs font-bold text-sm badge-error">
-        {data.newNotisCount.toString()}
-      </span>
-        }
        <Link to="/notifications" >
-        <RiNotification4Fill className="btn btn-sm btn-ghost" />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /> </svg>
+        <span className={`indicator-item badge badge-xs font-bold text-sm badge-error ${!unreadCount || unreadCount == 0 ? "hidden" :"" }`}>
+          {unreadCount  &&
+              unreadCount
+            }
+            {
+              loading && <span className="loading loading-spinner loading-xs"></span>
+            }
+        </span>
       </Link>
     </div>
-    {
-      me ? <Link className="btn btn-circle btn-soft btn-outline btn-info mx-5 uppercase p-7 text-lg" to="/profil">{me[0]}</Link>
-      : <Link to="/login" >Login</Link>
-    }
+      </button>
+
+       <div className="dropdown dropdown-end">
+      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+      <svg className="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+    </svg>
+
+        
+      </div>
+      <ul
+        tabIndex={-1}
+        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow space-y-2">
+        <li>
+           {
+            me ? <Link className="btn btn-circle btn-sm btn-soft btn-wide btn-outline btn-info uppercase text-md" to="/profil">{me.username}</Link>
+            : <Link to="/login" >Login</Link>
+          }
+        </li>
+        <li>
+          {me?.username != "" && <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>}
+        </li>
+      </ul>
+    </div>
   </div>
+  
 </div>
 {children}
 <Toaster

@@ -121,6 +121,13 @@ function App() {
                     <FindTransaction />
                   </ProtectedRoute>
                 }
+                /> <Route 
+                path="/transaction"
+                element={
+                  <ProtectedRoute permission="">
+                    <FindTransaction />
+                  </ProtectedRoute>
+                }
                 /> 
                 <Route 
                 path="/mytransactions"
