@@ -1,9 +1,10 @@
 import { gql } from "@apollo/client";
-import { useLazyQuery } from "@apollo/client/react";
-import { useEffect } from "react";
+import { useLazyQuery, useMutation } from "@apollo/client/react";
+import { useEffect, useState } from "react";
 import  { Toaster } from "react-hot-toast";
 import { RiNotification4Fill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import apolloClient from "../apolloClient";
 
 const GET_NOTIFS =gql`
   query GET_NOTIFS {
@@ -11,17 +12,35 @@ const GET_NOTIFS =gql`
 }
 `
 
+const LOGOUT = gql`
+mutation RevokeToken($refreshToken: String!) {
+  logout(refreshToken: $refreshToken) {
+    success
+    errors
+  }
+}
+`
 export default function Dashboard({ children }: { children: React.ReactNode }) {
      const [loadNotifs, {data}] = useLazyQuery<{newNotisCount:number}>(GET_NOTIFS);
-     const me  =  localStorage.getItem("me")
+     const [me,setMe]  =  useState(localStorage.getItem("me"))
+     const [logout] = useMutation(LOGOUT)
+     let navigate = useNavigate()
     //  const mode =  localStorage.getItem("mode")
+    const logoutfunc = ()=>{
+        logout({variables:{refreshToken:localStorage.getItem("refresh")}}).then(()=>{
+          localStorage.removeItem("access")
+          localStorage.removeItem("refresh")
+          setMe("")
+          apolloClient.clearStore()
+          navigate("/login")
+        })
+    }
     useEffect(() => {
 
-      const interval = setInterval(() => {
+     setInterval(() => {
         loadNotifs()
-      }, 1000);
+      }, 60000);
   
-      return () => clearInterval(interval);
     }, []);
 
     return <>
@@ -41,7 +60,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           <a>Authentication</a>
           <ul className="p-2">
             {
-              me == "" || me==null &&(
+              me != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>  :(
                 <>
                 <li><Link to="/register">Register</Link></li>
                 <li><Link to="/login">Login</Link></li>
@@ -55,6 +74,8 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       <li><Link to="/timbre-type" >Timbre Type</Link></li>
       <li><Link to="/scan" >Timbre</Link></li>
       <li><Link to="/pricing" >Pricing</Link></li>
+      <li><Link to="/mytransactions" >Mes transactions</Link></li>
+
       <li className="divider h-1"></li>
      <li>
          <label className="swap swap-rotate">
@@ -76,7 +97,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           <summary>Authentication</summary>
           <ul className="p-2 bg-base-100 w-40 z-1">
              {
-              me == "" || me==null &&(
+               me != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>  :(
                 <>
                 <li><Link to="/register">Register</Link></li>
                 <li><Link to="/login">Login</Link></li>
@@ -91,6 +112,8 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       <li><Link to="/timbre-type" >Timbre Type</Link></li>
       <li><Link to="/scan" >Timbre</Link></li>
       <li><Link to="/pricing" >Pricing</Link></li>
+      <li><Link to="/mytransactions" >Mes transactions</Link></li>
+      
      
     </ul>
   </div>

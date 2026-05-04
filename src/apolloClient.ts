@@ -27,6 +27,7 @@ const errorLink = new ErrorLink(({ error, operation,forward }) => {
     error.errors.forEach(({ message }) =>{
       // console.log(`===================================================================\n ${message}`)
       if (message.includes("Unauthenticated")) {
+        localStorage.removeItem("me")
         const _tokens = getTokens();
         return refreshClient.mutate({
           mutation: REFRESH_TOKEN_MUTATION,

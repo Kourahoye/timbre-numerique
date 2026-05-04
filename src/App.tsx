@@ -17,6 +17,7 @@ import Notifications from "./components/notifications";
 import Forbiden from "./components/403";
 import FindTransaction from "./components/findTransaction";
 import Transaction from "./components/transaction";
+import MyTransactions from "./components/myTransactions";
 
 function App() {
   return (
@@ -89,25 +90,41 @@ function App() {
             <Route
               path="/pricing"
               element={
-                <Price />
+                <ProtectedRoute permission="" >
+                  <Price />
+                </ProtectedRoute>
               }
               />
               <Route 
                 path="/notifications"
                 element={
-                  <Notifications />
+                  <ProtectedRoute permission="">
+                    <Notifications />
+                  </ProtectedRoute>
                 }
                 />
               <Route
               path="/pricing"
               element={
+                <ProtectedRoute permission="">
                 <Price />
+                </ProtectedRoute>
               }
               />
               <Route 
                 path="/transaction/:idTranction"
                 element={
-                  <FindTransaction />
+                  <ProtectedRoute permission="">
+                    <FindTransaction />
+                  </ProtectedRoute>
+                }
+                /> 
+                <Route 
+                path="/mytransactions"
+                element={
+                <ProtectedRoute permission="">
+                    <MyTransactions />
+                </ProtectedRoute>
                 }
                 />
           </Routes>
