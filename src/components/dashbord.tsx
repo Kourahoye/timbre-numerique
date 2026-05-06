@@ -6,6 +6,7 @@ import apolloClient from "../apolloClient";
 import { Can } from "./can";
 import { useNotifications } from "./hooks/useNotification";
 import { useAuth } from "./auth";
+import LanguageSwitcher from "./languageSeletor";
 
 
 
