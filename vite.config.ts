@@ -7,5 +7,5 @@ export default defineConfig({
   plugins: [react()],
   server: {
     allowedHosts: ["swimmer-bullwhip-rearview.ngrok-free.dev"]
-  }
+  },
 })

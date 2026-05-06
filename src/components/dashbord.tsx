@@ -6,6 +6,7 @@ import apolloClient from "../apolloClient";
 import { Can } from "./can";
 import { useNotifications } from "./hooks/useNotification";
 import { useAuth } from "./auth";
+import LanguageSwitcher from "./languageSeletor";
 
 
 
@@ -167,6 +168,9 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
             me ? <Link className="btn btn-circle btn-sm btn-soft btn-wide btn-outline btn-info uppercase text-md" to="/profil">{me.username}</Link>
             : <Link to="/login" >Login</Link>
           }
+        </li>
+        <li>
+          <LanguageSwitcher />
         </li>
         <li>
           {me?.username != "" && <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>}

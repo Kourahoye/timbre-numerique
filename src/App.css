@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-
 @custom-variant dark (&:where(
   [data-theme=Slate],
 ));
@@ -44,7 +43,6 @@
   --depth: 1;
   --noise: 1;
 };
-
 
 @plugin "daisyui/theme" {
   name: "desk";
@@ -114,4 +112,4 @@
   --border: 1.5px;
   --depth: 1;
   --noise: 1;
-}
+};
