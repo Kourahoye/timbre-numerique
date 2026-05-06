@@ -1,47 +1,42 @@
-"use client"
-
 import { Languages } from "lucide-react"
 import { useTranslation } from "react-i18next"
-
-import { Button } from "./ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation()
 
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng)
+  }
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline">
-          <Languages className="h-4 w-4 mr-2" />
-          Language
-        </Button>
-      </DropdownMenuTrigger>
+    <div className="dropdown dropdown-end">
+      {/* Trigger */}
+      <label tabIndex={0} className="flex">
+        <Languages className="h-4 w-4 mr-2" />
+        Language
+      </label>
 
-      <DropdownMenuContent className="w-48">
-        <DropdownMenuLabel>Select Language</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+      {/* Menu */}
+      <ul
+        tabIndex={0}
+        className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+      >
+        <li className="menu-title">
+          <span>Select Language</span>
+        </li>
 
-        <DropdownMenuRadioGroup
-          value={i18n.language}
-          onValueChange={(value) => i18n.changeLanguage(value)}
-        >
-          <DropdownMenuRadioItem value="en">🇺🇸 English</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="fr">🇫🇷 Français</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="es">🇪🇸 Español</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="de">🇩🇪 Deutsch</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="ja">🇯🇵 日本語</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="zh">🇨🇳 中文</DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        <li>
+          <button onClick={() => changeLanguage("en")}>
+            🇺🇸 English
+          </button>
+        </li>
+
+        <li>
+          <button onClick={() => changeLanguage("fr")}>
+            🇫🇷 Français
+          </button>
+        </li>
+      </ul>
+    </div>
   )
 }

@@ -75,8 +75,11 @@ export default function FindTransaction(){
     const [loadTransaction, { loading, data,error }] = useLazyQuery<TranscType>(FIND_TRANSACTION)
     const [giveResponse] = useMutation<{endTransactions:{message:string,success:boolean}}>(GIVE_RESPONSE)
     const me  =  localStorage.getItem("me")
+
     useEffect(()=>{
-       loadTransaction({variables:{id:Number.parseInt(idTranction?.toString())}}) 
+      if(idTranction){
+        loadTransaction({variables:{id:Number.parseInt(idTranction?.toString())}}) 
+      }
     },[])
 
     const answer = (id:number,choix:string)=>{

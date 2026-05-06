@@ -170,6 +170,9 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           }
         </li>
         <li>
+          <LanguageSwitcher />
+        </li>
+        <li>
           {me?.username != "" && <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>}
         </li>
       </ul>
