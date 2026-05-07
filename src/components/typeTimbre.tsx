@@ -5,6 +5,7 @@ import type { DeleteTypeMutationResponse, GetTypeTimbresQuery } from "./types";
 import { RiAddLine, RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const AddType = gql`
   mutation AddType($name: String!) {
@@ -48,6 +49,7 @@ mutation CHANGE_TYPE_NAME {
 `;
 
 export default function TypeTimbre() {
+  const {t} = useTranslation();
   const [error, setError] = useState("");
   const [addType, { loading: load }] = useMutation(AddType);
   const [name, setName] = useState("");
@@ -57,16 +59,16 @@ export default function TypeTimbre() {
   const [changeName,{loading:changingName}] = useMutation(CHANGE_TYPE_NAME);
   const deleteType = (id: number) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: `${t("confirm.areYouSure")}`,
+      text: `${t("confirm.cannotRevert")}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText:`${t("confirm.yesDelete")}`,
     }).then(async (result) => {
       if (!result.isConfirmed) return;
-      const toastId = toast.loading("Please wait...");
+      const toastId = toast.loading(`${t("common.pleaseWait")}`);
       deleteTimbreType({ variables: { id: id } })
         .then((res) => {
           const data: DeleteTypeMutationResponse =
@@ -79,7 +81,7 @@ export default function TypeTimbre() {
           refetch();
         })
         .catch(() => {
-          toast.error("Erreur imprevue!", { id: toastId });
+          toast.error(`${t("common.unexpectedError")}`, { id: toastId });
         });
     });
   };
@@ -96,7 +98,7 @@ export default function TypeTimbre() {
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 className="font-bold text-lg">Modifier le type de timbre</h3>
+            <h3 className="font-bold text-lg">{t("timbre.modifyType")}</h3>
             <p className="py-4">
               <form method="post" 
               className="flex justify-between items-center space-x-2"
@@ -104,7 +106,7 @@ export default function TypeTimbre() {
                 e.preventDefault()
                 e.preventDefault()
                 if(!currId){
-                  toast.error("Selectionez le type à modifier")
+                  toast.error(`${t('timbre.pickTimbreType')}`)
                   return
                 }
                 const form = new FormData(e.currentTarget)
@@ -112,7 +114,7 @@ export default function TypeTimbre() {
                 if (name == "" || name == null){
                   toast.error("Donnez le nouveau nom")
                 }
-                const toastId = toast.loading("Please wait...")
+                const toastId = toast.loading(`${t("common.pleaseWait")}`)
                 changeName({variables:{id:currId,name:name}}).then((res)=>{
                   if(res.data){
                     toast.success("Changement effectuer",{id:toastId})
@@ -130,10 +132,12 @@ export default function TypeTimbre() {
               }}
               >
                 <div className="form-control w-full">
-                  <input type="text" placeholder="Type here" name="new_name" required className="input input-sm validator input-bordered w-full" />
+                  <input type="text" placeholder={t("common.typeHere")} name="new_name" required className="input input-sm validator input-bordered w-full" />
                 </div>
                 <button className="btn btn-info btn-outline btn-ghost btn-sm" type="submit">
-                  <span>Modifier</span>
+                  <span>
+                    {t("common.update")}
+                  </span>
                   {
                     changingName && <span className="loading loading-spinner loading-sm"></span>
                   }
@@ -152,26 +156,26 @@ export default function TypeTimbre() {
             </form>
             <div className="p-6">
               <h1 className="text-2xl font-bold text-center mb-4">
-                Créer un type de timbre
+                {t("timbre.createType")}
               </h1>
               <form
                 className="space-y-2"
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (name.trim() === "") {
-                    setError("Le nom du type de timbre est requis.");
+                    setError(`${t("timbre.typeNameRequired")}`);
                     return;
                   } else {
                     setError("");
                   }
                   addType({ variables: { name: name } })
                     .then(() => {
-                      toast.success("Type de timbre créé avec succès !");
+                      toast.success(`${t("timbre.createTypeSuccess")}`);
                       refetch();
                     })
                     .catch((err) => {
                       if (err.message.includes("timbre_typetimbre.name")) {
-                        setError("Ce type de timbre existe déjà.");
+                        setError(`${t("timbre.typeExists")}`);
                         return;
                       }
                       setError(err.message);
@@ -211,7 +215,7 @@ export default function TypeTimbre() {
                   className="btn btn-sm btn-info btn-outline btn-ghost w-full mt-4"
                   type="submit"
                 >
-                  Créer
+                  {t("common.create")}
                   {load && (
                     <span className="loading loading-sm loading-spinner"></span>
                   )}
@@ -222,7 +226,7 @@ export default function TypeTimbre() {
         </dialog>
         <div className="card bg-base-100 shadow-xl p-6 ml-4">
           <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
-            <span>Types de timbres</span>
+            <span>{t("nav.timbreType")}</span>
             <button
               className="btn btn-xs btn-info btn-outline btn-ghost"
               onClick={() => {
@@ -242,26 +246,26 @@ export default function TypeTimbre() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Name</th>
-                  <th>Created at</th>
-                  <th>updated at</th>
-                  <th>Created by</th>
-                  <th>updated by</th>
-                  <th>Actions</th>
+                  <th>{t("session.name")}</th>
+                   <th>{t("session.createdAt")}</th>
+                  <th>{t("session.updatedAt")}</th>
+                  <th>{t("session.createdBy")}</th>
+                  <th>{t("session.updatedBy")}</th>
+                  <th>{t("session.actions")}</th>
                 </tr>
               </thead>
               <tbody>
                 {loading && (
                   <tr>
                     <td className="text-center" colSpan={6}>
-                      <span className="loading loading-lg loading-spinner"></span>{" "}
+                      <span className="loading loading-lg loading-spinner"></span>
                     </td>
                   </tr>
                 )}
                 {called && data && data?.getTimbresType.length === 0 && (
                   <tr>
                     <td className="text-xl font-mono text-center font-semibold" colSpan={6}>
-                      Aucun type de timbre trouvé
+                      {t("session.noType")}
                     </td>
                   </tr>
                 )}

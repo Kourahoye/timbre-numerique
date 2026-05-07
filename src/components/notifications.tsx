@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import {  RiEyeLine, RiRefreshFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
@@ -59,6 +60,7 @@ export type AllNotifs = {
   }[];
 };
 export default function Notifications() {
+  const {t} = useTranslation();
   const { loading, error, data, refetch } = useQuery<Notifs>(NEW_NOTIFICATIONS);
   const [ loadAll,{ loading:loadingAll, error:errorAll, data:dataAll, refetch:refecthAll,called }] = useLazyQuery<AllNotifs>(NOTIFICATIONS);
    const [markasread] = useMutation<{markAsRead:{message:string,success:boolean}}>(MARK_ONE_AS_READ);
@@ -110,7 +112,7 @@ export default function Notifications() {
         {data && (
           <ul className="space-y-4 w-full card shadow bg-base-200 p-4">
             <li className="p-4 pb-2 text-lg tracking-wide text-error">
-              Notifications non lues
+              {t("notifications.title")}
             </li>
             {!dataAll  && data.notifications.map((notif) => {
               return (
@@ -152,13 +154,13 @@ export default function Notifications() {
                                 >
                             <button type="submit"
                             className="text-xs text-blue-600 hover:underline">
-                                Marquer comme lu
+                                {t("notifications.markAsRead")}
                             </button>
                             
                             </form>
                             }
                             {
-                                notif.link && <Link to={`/transaction/${notif.link.id}`} type="button" onClick={()=>markasread({variables:{id:Number.parseInt(notif.id)}}).then(()=>{refetch()})} className="btn btn-sm btn-outline btn-info btn-ghost items-center"><span>Voir</span> <RiEyeLine className="inline" />  </Link>
+                                notif.link && <Link to={`/transaction/${notif.link.id}`} type="button" onClick={()=>markasread({variables:{id:Number.parseInt(notif.id)}}).then(()=>{refetch()})} className="btn btn-sm btn-outline btn-info btn-ghost items-center"><span>{t("common.see")}</span> <RiEyeLine className="inline" /></Link>
                             }
                             </div>
                 </li>
@@ -205,20 +207,20 @@ export default function Notifications() {
                                 >
                             <button type="submit"
                             className="text-xs text-blue-600 hover:underline">
-                                Marquer comme lu
+                                {t("notifications.markAsRead")}
                             </button>
                            
                             </form>
                         }
                         {
-                            notif.link && <Link to={`/transaction/${notif.link.id}`} type="button" onClick={()=>markasread({variables:{id:Number.parseInt(notif.id)}}).then(()=>{refetch()})} className="btn btn-sm btn-outline btn-info btn-ghost items-center"><span>Voir</span> <RiEyeLine className="inline" />  </Link>
+                            notif.link && <Link to={`/transaction/${notif.link.id}`} type="button" onClick={()=>markasread({variables:{id:Number.parseInt(notif.id)}}).then(()=>{refetch()})} className="btn btn-sm btn-outline btn-info btn-ghost items-center"><span>{t("common.see")}</span> <RiEyeLine className="inline" />  </Link>
                         }
                         </div>
                 </li>
               );
             })}
             {
-                ! called && <li className="text-xs"> <button onClick={()=>loadAll()} className="link link-info" >Afficher toutes les notifications</button>
+                ! called && <li className="text-xs"> <button onClick={()=>loadAll()} className="link link-info" > {t("notifications.showAll")}</button>
                     {
                         loadingAll && <span className="loading loading-spinner loading-sm"></span>
                     }

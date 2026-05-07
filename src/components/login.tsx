@@ -3,8 +3,10 @@ import { useMutation } from "@apollo/client/react";
 import toast from "react-hot-toast";
 import { storeTokens } from "../services/manageTokens";
 import { LOGIN_MUTATION } from "../graphql/mutations";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
+  const {t} = useTranslation();
   type LoginResponse = {
     tokenAuth: {
       success: boolean;
@@ -32,7 +34,7 @@ export default function Login() {
         if (!data?.tokenAuth?.success) {
           setErrorMsg(
             data?.tokenAuth?.errors?.nonFieldErrors?.[0]?.message ||
-              "Identifiants invalides",
+              t("auth.invalidCredentials"),
           );
           return;
         }
@@ -40,10 +42,10 @@ export default function Login() {
         const refresh = data.tokenAuth.refreshToken!.token;
         storeTokens(access, refresh);
         setErrorMsg("");
-        toast.success("Connected successfully");
+        toast.success(`${t("auth.connectSuccess")}`);
         window.location.href = "/";
       },
-      onError: () => setErrorMsg("Erreur serveur, réessayez."),
+      onError: () => setErrorMsg(`${t("auth.serverError")}`),
     },
   );
 
@@ -55,28 +57,25 @@ export default function Login() {
   return (
     <div className="min-h-screen flex justify-center items-center bg-base-200">
       <div className="card w-96 bg-base-100 shadow-xl p-6">
-        <h1 className="text-2xl font-bold text-center mb-4">Connexion</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">{t("auth.login")}</h1>
 
         <form onSubmit={handleSubmit}>
-          {/* Username */}
           <div className="form-control mb-4">
             <label className="label">
-              <span className="label-text">Nom d'utilisateur</span>
+              <span className="label-text">{t("auth.username")}</span>
             </label>
             <input
               type="text"
-              placeholder="Nom d'utilisateur"
+              placeholder={t("auth.usernamePlaceholder")}
               className="input input-bordered"
               value={form.username}
               onChange={(e) => setForm({ ...form, username: e.target.value })}
               required
             />
           </div>
-
-          {/* Password */}
           <div className="form-control mb-4">
             <label className="label">
-              <span className="label-text">Mot de passe</span>
+              <span className="label-text">{t("auth.password")}</span>
             </label>
             <input
               type="password"
@@ -92,7 +91,7 @@ export default function Login() {
           )}
           <div className="form-control">
             <button className="btn btn-primary" type="submit">
-              <span>Se connecter</span>
+              <span>{t("auth.login")}</span>
               <span
                 className={`${loading ? "loading loading-spinner" : "hidden"}`}
               ></span>
@@ -101,9 +100,9 @@ export default function Login() {
         </form>
 
         <p className="text-center text-sm mt-4">
-          Pas de compte ?
+          {t("auth.noAccount")}
           <a href="/register" className="link link-primary ml-1">
-            S'inscrire
+            {t("auth.register")}
           </a>
         </p>
       </div>

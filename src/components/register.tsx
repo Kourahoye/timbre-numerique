@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client/react";
 import {REGISTER_MUTATION } from "../graphql/mutations";
+import { useTranslation } from "react-i18next";
 
 
 export default function Register() {
+  const {t} = useTranslation();
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -38,7 +40,7 @@ export default function Register() {
           errors?.email?.[0]?.message ||
           errors?.username?.[0]?.message ||
           errors?.nonFieldErrors?.[0]?.message ||
-          "Une erreur est survenue.";
+          `${t("common.error")}`;
 
         setErrorMsg(errorText);
         setSuccessMsg("");
@@ -53,10 +55,10 @@ export default function Register() {
         localStorage.setItem("refresh", typedData.register.token.refreshToken);
       }
 
-      setSuccessMsg("Compte créé avec succès !");
+      setSuccessMsg(`${t("auth.accountCreated")}`);
       setTimeout(() => (window.location.href = "/login"), 1000);
     },
-    onError: () => setErrorMsg("Erreur serveur."),
+    onError: () => setErrorMsg(`${t("auth.serverError")}`),
   });
 
   const handleSubmit = (e: { preventDefault: () => void; }) => {
@@ -67,18 +69,17 @@ export default function Register() {
   return (
     <div className="min-h-screen flex justify-center items-center bg-base-200">
       <div className="card w-96 bg-base-100 shadow-xl p-6">
-        <h1 className="text-2xl font-bold text-center mb-4">Créer un compte</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">{t("auth.register")}</h1>
 
         <form onSubmit={handleSubmit}>
-          {/* Username */}
           <div className="form-control mb-3">
             <label className="label">
-              <span className="label-text">Nom d'utilisateur</span>
+              <span className="label-text">{t("auth.username")}</span>
             </label>
             <input
               type="text"
               className="input input-bordered"
-              placeholder="Nom d'utilisateur"
+              placeholder={t("auth.usernamePlaceholder")}
               value={form.username}
               onChange={(e) =>
                 setForm({ ...form, username: e.target.value })
@@ -86,16 +87,14 @@ export default function Register() {
               required
             />
           </div>
-
-          {/* Email */}
           <div className="form-control mb-3">
             <label className="label">
-              <span className="label-text">Email</span>
+              <span className="label-text">{t("auth.email")}</span>
             </label>
             <input
               type="email"
               className="input input-bordered"
-              placeholder="exemple@mail.com"
+              placeholder={t("auth.emailPlaceholder")}
               value={form.email}
               onChange={(e) =>
                 setForm({ ...form, email: e.target.value })
@@ -104,10 +103,9 @@ export default function Register() {
             />
           </div>
 
-          {/* Password 1 */}
           <div className="form-control mb-3">
             <label className="label">
-              <span className="label-text">Mot de passe</span>
+              <span className="label-text">{t("auth.password")}</span>
             </label>
             <input
               type="password"
@@ -120,11 +118,9 @@ export default function Register() {
               required
             />
           </div>
-
-          {/* Password 2 */}
           <div className="form-control mb-3">
             <label className="label">
-              <span className="label-text">Confirmer mot de passe</span>
+              <span className="label-text">{t("auth.confirmPassword")}</span>
             </label>
             <input
               type="password"
@@ -137,34 +133,28 @@ export default function Register() {
               required
             />
           </div>
-
-          {/* Error */}
           {errorMsg && (
             <p className="text-error text-sm text-center mb-2">{errorMsg}</p>
           )}
-
-          {/* Success */}
           {successMsg && (
             <p className="text-success text-sm text-center mb-2">
               {successMsg}
             </p>
           )}
-
-          {/* Submit */}
           <div className="form-control mt-2">
             <button
               type="submit"
-              className={`btn btn-primary ${loading ? "loading" : ""}`}
+              className={`btn btn-primary ${loading ? t("common.loading") : ""}`}
             >
-              S'inscrire
+              {t("auth.register")}
             </button>
           </div>
         </form>
 
         <p className="text-center text-sm mt-4">
-          Déjà un compte ?
+          {t("auth.alreadyAccount")}
           <a href="/login" className="link link-primary ml-1">
-            Se connecter
+            {t("auth.login")}
           </a>
         </p>
       </div>

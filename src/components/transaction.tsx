@@ -5,6 +5,8 @@ import type { ScanAgrs, ScanData } from "./types";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { gql } from "@apollo/client";
+import { useTranslation } from "react-i18next";
+
 
 const CONSUME_TIMBRE = gql`
 mutation CONSUME_TIMBRE($id:Int!){
@@ -15,6 +17,7 @@ mutation CONSUME_TIMBRE($id:Int!){
 `;
 export default function Transaction(){
         const { qr } = useParams();
+         const {t} = useTranslation();
         const [ scan, { loading, error, data }] = useLazyQuery<ScanData,ScanAgrs>(SCAN);
         const [consumeTimbre] = useMutation(CONSUME_TIMBRE);
 
@@ -28,19 +31,19 @@ export default function Transaction(){
          const form = new FormData(e.currentTarget)
          const code = form.get("code") || null
         if(code =="" || code ==null){
-            toast.error("Donnez le code")
+            toast.error(`${t("scan.provideCode")}`)
             return;
         }
          scan({variables:{ref:code.toString()}})
     }
 
     const consume = ()=>{
-       const toastId = toast.loading("Please wait..")
+       const toastId = toast.loading(`${t("common.pleaseWait")}`)
        if(data){
 
          consumeTimbre({variables:{id:Number.parseInt(data?.scan.id.toString())}}).then((res)=>{
            if (res.data){
-             toast.success("Transaction demander\n En attente de confirmation",{id:toastId})
+             toast.success(`${t("transaction.requestSuccess")}`,{id:toastId})
             }
             if ( res.error){
               toast.error(res.error.message,{id:toastId})
@@ -51,7 +54,7 @@ export default function Transaction(){
           }
         })
       }else{
-        toast.error("Viellez selectionner un timbre")
+        toast.error(`${"scan.selectTimbre"}`)
       }
     }
     return <>
@@ -62,22 +65,22 @@ export default function Transaction(){
           <div className="flex items-center justify-center space-x-2 mb-5">
               <div className="form-control input input-bordered  w-full max-w-xs">
                 <label className="label">
-                  <span className="label-text font-mono">Code</span>
+                  <span className="label-text font-mono">{t("scan.code")}</span>
                 </label>
-                <input type="search" placeholder="Type here" name="code" required className="w-full" />
+                <input type="search" placeholder={t("common.typeHere")} name="code" required className="w-full" />
               </div>
-              <button className='btn btn-sm btn-info'> Search </button>
+              <button className='btn btn-sm btn-info'> {t("common.search")} </button>
           </div>
           {loading ?? <div className="loading-spinner loading loading-lg" ></div>  }
-          {error && <p className="alert alert-error">Error: {error.message}</p>}
+          {error && <p className="alert alert-error">{t("common.error")}:<br/> {error.message}</p>}
           {data != undefined && ( <div className="card w-96 bg-base-100 shadow-xl p-6">
-              <h1 className="text-2xl font-bold mb-4">Timbre Details</h1>
-              <p><strong>Reference:</strong> {data.scan.reference}</p>
-              <p><strong>Type:</strong> {data.scan.type.name}</p>
-              <p className="flex items-center gap-4"><strong>Status:</strong> {data.scan.used ? <span aria-label="success" className="status status-lg status-error"></span> : <span aria-label="success" className="status status-lg status-success"></span>}</p>
+              <h1 className="text-2xl font-bold mb-4">{t("timbre.details")}</h1>
+              <p><strong>{t("timbre.reference")}:</strong> {data.scan.reference}</p>
+              <p><strong>{t("timbre.type")}:</strong> {data.scan.type.name}</p>
+              <p className="flex items-center gap-4"><strong>{t("timbre.status")}:</strong> {data.scan.used ? <span aria-label="success" className="status status-lg status-error"></span> : <span aria-label="success" className="status status-lg status-success"></span>}</p>
               {
                   data.scan.used == false &&
-                  <button className='btn btn-warning btn-ghost btn-outline mt-5' onClick={consume}>Consommer</button>
+                  <button className='btn btn-warning btn-ghost btn-outline mt-5' onClick={consume}>{t("scan.consumme")}</button>
               }
           </div>)}
       </form>

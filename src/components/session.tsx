@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { RiAddLine, RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 
 const ADD_SESSION = gql`
   mutation ADD_SESSION($name: String!, $start: Date!, $end: Date!) {
@@ -71,6 +72,7 @@ mutation CHANGE_SESSION_DATE($id:Int!,$start:Date!,$end:Date!) {
 }
 `;
 export default function Session() {
+  const {t} = useTranslation();
   const [addsession, { loading: adding }] = useMutation(ADD_SESSION);
   const [error, setError] = useState("");
   const [loadSessions, { called, loading, data, refetch }] =useLazyQuery<Sessions>(ALL_SESSIONS);
@@ -86,19 +88,19 @@ export default function Session() {
 
   const toogle = (id: number, active: boolean) => {
     Swal.fire({
-      title: "Are you sure?",
-      html: `${active ? "Voulez vous desactiver la session.<br/>Toutes les sessions seront desactivees" : "Voulez vous activer cette session.<br/>La session active sera desactiver"}`,
+      title: `${t("confirm.areYouSure")}`,
+      html: `${active ? t("session.toggleActivate") : t("session.toggleDeactivate")}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: `Yes, ${active ? "inactive" : "active"} it!`,
+      confirmButtonText: `Yes, ${active ? t("common.yesInactive") : t("common.yesActive")}`,
     }).then(async (result) => {
       if (!result.isConfirmed) {
         // e.preventDefault()
         return;
       }
-      const toastId = toast.loading("Please wait...");
+      const toastId = toast.loading(`${t("common.pleaseWait")}`);
       toogleSession({ variables: { id: id } })
         .then((res) => {
           const data: ToggleSessionMutationResponse =
@@ -112,23 +114,23 @@ export default function Session() {
           refetch();
         })
         .catch(() => {
-          toast.error("Erreur imprevue!", { id: toastId });
+          toast.error(`${t("common.unexpectedError")}`, { id: toastId });
         });
     });
   };
 
   const sessionDelete = (id: number) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: `${t("confirm.areYouSure")}`,
+      text: `${t("confirm.cannotRevert")}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText:`${t("confirm.yesDelete")}`,
     }).then(async (result) => {
       if (!result.isConfirmed) return;
-      const toastId = toast.loading("Please wait...");
+      const toastId = toast.loading(`${t("common.pleaseWait")}`);
       deleteSession({ variables: { id: id } })
         .then((res) => {
           // toast.success("Type de timbre supprimé avec succès !");
@@ -144,7 +146,7 @@ export default function Session() {
           refetch();
         })
         .catch(() => {
-          toast.error("Erreur imprevue!", { id: toastId });
+          toast.error(`${t("common.unexpectedError")}`, { id: toastId });
         });
     });
   };
@@ -161,28 +163,27 @@ export default function Session() {
             </form>
             <div className="p-6">
               <h1 className="text-2xl font-bold text-center mb-4">
-                Créer une nouvelle session{" "}
+                {t("session.createSession")}
               </h1>
               <form
                 method="post"
                 className="space-y-3 flex flex-col items-center"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  // console.log("==================================================================================",typeof(e))
                   const formData = new FormData(e.currentTarget);
                   const name = formData.get("name") || null;
                   const start = formData.get("date_start") || null;
                   const end = formData.get("date_end") || null;
                   setError("");
                   if (start == null || end == null || name == null) {
-                    toast.error("Error: Viellez remplir les champs", {});
+                    toast.error("Error: Viellez remplir les champs");
                     return;
                   }
                   if (start >= end) {
-                    setError("Start date must be before end date");
+                    setError(`${t("session.startBeforeEnd")}`);
                     return;
                   }
-                  const toastId = toast.loading("Adding session");
+                  const toastId = toast.loading(`${t("common.pleaseWait")}`);
                   addsession({
                     variables: { name: name, start: start, end: end },
                   })
@@ -192,7 +193,7 @@ export default function Session() {
                       // if (data == null){
                       // }
                       if (data.addSession.id) {
-                        toast.success(`Session ${data.addSession.name} added`, {
+                        toast.success(`${t("session.addSuccess",{name:data.addSession.name})}`, {
                           id: toastId,
                         });
                       }
@@ -204,7 +205,7 @@ export default function Session() {
                           "UNIQUE constraint failed: timbre_session.name",
                         )
                       ) {
-                        toast.error("Une session avec ce nom existe deja", {
+                        toast.error(`${t("session.duplicateName")}`, {
                           id: toastId,
                         });
                         return;
@@ -216,56 +217,39 @@ export default function Session() {
               >
                 <div className="form-control w-full">
                   <label className="label">
-                    <span className="label-text">Name</span>
-                    <span className="label-text-alt"></span>
+                    <span className="label-text"> <th>{t("session.name")}</th></span>
                   </label>
                   <input
                     type="text"
                     name="name"
                     required
-                    placeholder="Type here"
+                    placeholder={t("common.typeHere")}
                     className="input input-bordered w-full"
                   />
-                  {/* <label className="label">
-                    <span className="label-text-alt">
-                     
-                    </span>
-                    <span className="label-text-alt"></span>
-                  </label> */}
                 </div>
                 <div className="form-control w-full">
                   <label className="label">
-                    <span className="label-text">Date Start</span>
-                    <span className="label-text-alt"></span>
+                    <span className="label-text">{t("session.startDate")}</span>
                   </label>
                   <input
                     type="date"
-                    placeholder="Type here"
+                    placeholder={t("common.typeHere")}
                     required
                     name="date_start"
                     className="input input-bordered w-full"
                   />
-                  {/* <label className="label">
-                    <span className="label-text-alt"></span>
-                    <span className="label-text-alt"></span>
-                  </label> */}
                 </div>
                 <div className="form-control w-full">
                   <label className="label">
-                    <span className="label-text">Dated End</span>
-                    <span className="label-text-alt"></span>
+                    <span className="label-text">{t("session.endDate")}</span>
                   </label>
                   <input
                     type="date"
-                    placeholder="Type here"
+                    placeholder={t("common.typeHere")}
                     required
                     name="date_end"
                     className="input input-bordered w-full"
                   />
-                  {/* <label className="label">
-                    <span className="label-text-alt"></span>
-                    <span className="label-text-alt"></span>
-                  </label> */}
                 </div>
                 {error && (
                   <div role="alert" className="alert alert-error">
@@ -286,7 +270,7 @@ export default function Session() {
                   </div>
                 )}
                 <button className="btn btn-sm btn-outline btn-info btn-ghost">
-                  <span>Enregistrer</span>
+                  <span>{t("common.save")}</span>
                   {adding && (
                     <span className="loading loading-spinner loading-sm"></span>
                   )}
@@ -297,20 +281,20 @@ export default function Session() {
         </dialog>
         <dialog id="update_session" className="modal">
           <div className="modal-box">
-            <h3 className="font-bold text-lg">Modification!</h3>
+            <h3 className="font-bold text-lg">{t("session.modification")}</h3>
             <div className="py-4">
               <form method="post" className="space-x-2 space-y-2 flex justify-between" onSubmit={(e)=>{
                 e.preventDefault()
                 if(!currId){
-                  toast.error("Selectionez la session à modifier")
+                  toast.error(`${t("session.selectSetion")}`)
                   return
                 }
                 const form = new FormData(e.currentTarget)
                 const name = form.get("new_name") 
                 if (name == "" || name == null){
-                  toast.error("Donnez le nouveau nom")
+                  toast.error(`${t("session.newName")}`)
                 }
-                const toastId = toast.loading("Please wait...")
+                const toastId = toast.loading(`${t("common.pleaseWait")}`)
                 changeName({variables:{id:currId,name:name}}).then((res)=>{
                   if(res.data){
                     toast.success("Changement effectuer",{id:toastId})
@@ -327,7 +311,7 @@ export default function Session() {
                 })
               }}>
                 <input type="text" placeholder="new name" required name="new_name" className="input input-sm w-full" />
-                <button className='btn btn-sm btn-outline btn-ghost btn-info'><span>Changer</span>
+                <button className='btn btn-sm btn-outline btn-ghost btn-info'><span>{t("common.change")}</span>
                 {
                   changingName && <span className="loading loading-spinner loading-xs"></span>
                 }
@@ -340,16 +324,16 @@ export default function Session() {
                   const start =  form.get("new_start")
                   const end =  form.get("new_end")
                   if (start == null || start == "" || end==null || end==""){
-                    toast.error("Remplissez les champs")
+                    toast.error(`${t("session.fillFields")}`)
                     return;
                   }if(start > end){
-                    toast.error("La date de debut doit venir avant la date de fin")
+                    toast.error(`${t("session.startBeforeEnd")}`)
                     return;
                   }
-                  const toastId = toast.loading("Please wait...")
+                  const toastId = toast.loading(`${t("common.pleaseWait")}`)
                     changeDates({variables:{id:currId,start:start,end:end}}).then((res)=>{
                       if(res.data){
-                        toast.success("Changement effectuer",{id:toastId})
+                        toast.success(`${t("session.changeSuccess")}`,{id:toastId})
                         refetch()
                         return
                       }
@@ -364,17 +348,17 @@ export default function Session() {
                 }}>
                   <div className="form-control w-full ">
                     <label className="label">
-                      <span className="label-text">Start date</span>
+                      <span className="label-text">{t("session.startDate")}</span>
                     </label>
-                    <input type="date" placeholder="Type here" name="new_start" required className="input input-bordered w-full validator" />
-                    <p className="validator-hint">Must be 2025</p>
+                    <input type="date" placeholder={t("common.typeHere")} name="new_start" required className="input input-bordered w-full validator" />
+                    <p className="validator-hint"><span>{t("common.fieldRequired")}</span></p>
                   </div>
                   <div className="form-control w-full ">
                     <label className="label">
-                      <span className="label-text">End date</span>
+                      <span className="label-text">{t("session.endDate")}</span>
                     </label>
-                    <input type="date" placeholder="Type here" name="new_end" required className="input validator input-bordered w-full " />
-                    <p className="validator-hint">Ce champ est requis</p>
+                    <input type="date" placeholder={t("common.typeHere")} name="new_end" required className="input validator input-bordered w-full " />
+                    <p className="validator-hint"><span>{t("common.fieldRequired")}</span></p>
                   </div>
                   <div>
                   </div>
@@ -390,7 +374,7 @@ export default function Session() {
             </div>
             <div className="modal-action">
               <form method="dialog">
-                <button className="btn">Close</button>
+                <button className="btn">{t("common.save")}</button>
               </form>
             </div>
           </div>
@@ -417,22 +401,22 @@ export default function Session() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Name</th>
-                  <th>Debut</th>
-                  <th>Fin</th>
-                  <th>Active</th>
-                  <th>Created_at</th>
-                  <th>updated_at</th>
-                  <th>Created_by</th>
-                  <th>updated_by</th>
-                  <th>Actions</th>
+                  <th>{t("session.name")}</th>
+                  <th>{t("session.startDate")}</th>
+                  <th>{t("session.endDate")}</th>
+                  <th>{t("session.active")}</th>
+                  <th>{t("session.createdAt")}</th>
+                  <th>{t("session.updatedAt")}</th>
+                  <th>{t("session.createdBy")}</th>
+                  <th>{t("session.updatedBy")}</th>
+                  <th>{t("session.actions")}</th>
                 </tr>
               </thead>
               <tbody>
                 {loading && (
                   <tr>
                     <td    className="text-xl font-mono text-center font-semibold" colSpan={7}>
-                      <span className="loading loading-lg loading-spinner"></span>{" "}
+                      <span className="loading loading-lg loading-spinner"></span>
                     </td>
                   </tr>
                 )}
