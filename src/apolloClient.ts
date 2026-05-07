@@ -2,6 +2,7 @@ import { ApolloClient, InMemoryCache, ApolloLink, HttpLink, CombinedGraphQLError
 import { ErrorLink } from '@apollo/client/link/error';
 import { REFRESH_TOKEN_MUTATION } from './graphql/mutations';
 import { getTokens, storeTokens } from './services/manageTokens';
+import i18n from './i18n';
 
 // --- Client pour refresh uniquement ---
 const refreshClient = new ApolloClient({
@@ -16,6 +17,7 @@ const authLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {
         Authorization: `JWT ${tokens.accessToken}`,
+        'Accept-Language': i18n.language,
       },
     });
   }
@@ -44,6 +46,7 @@ const errorLink = new ErrorLink(({ error, operation,forward }) => {
             headers: {
               ...headers,
               Authorization: `JWT ${accessToken}`,
+              'Accept-Language': i18n.language,
             }
           }));
           console.log(

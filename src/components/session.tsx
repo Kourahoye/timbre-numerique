@@ -302,10 +302,15 @@ export default function Session() {
                     return
                   }
                   if(res.error){
+                   
                     toast.error(res.error.message,{id:toastId})
                   }
                 }).catch((error)=>{
                   if(error.message){
+                     if(error.message.includes("timbre_session_name_key")){
+                      toast.error(`${t("session.duplicateName")}`,{id:toastId})
+                      return
+                    }
                     toast.error(error.message,{id:toastId})
                   }
                 })

@@ -19,6 +19,7 @@ import FindTransaction from "./components/findTransaction";
 import Transaction from "./components/transaction";
 import MyTransactions from "./components/myTransactions";
 import { AuthProvider } from "./components/auth";
+import DashboardInfo from "./components/dashboard";
 
 function App() {
   return (
@@ -134,6 +135,14 @@ function App() {
                 element={
                 <ProtectedRoute permission="">
                     <MyTransactions />
+                </ProtectedRoute>
+                }
+                />
+                <Route 
+                path="/dashboard"
+                element={
+                <ProtectedRoute permission="">
+                    <DashboardInfo />
                 </ProtectedRoute>
                 }
                 />

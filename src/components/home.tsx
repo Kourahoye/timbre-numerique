@@ -71,7 +71,7 @@ function Home() {
               onSubmit={(e) => {
                 e.preventDefault();
                 Swal.fire({
-                  title: `${t("confirm.submitCard")}`,
+                  title: `${t("timbre.submitCard")}`,
                   input: "text",    
                   inputAttributes: { autocapitalize: "on" },
                   showCancelButton: true,

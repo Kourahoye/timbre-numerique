@@ -137,7 +137,7 @@ export default function FindTransaction(){
             <div className="card w-96 bg-base-100 shadow-xl p-6">
               <h1 className="text-2xl font-bold mb-4">{t("transaction.title")}</h1>
               <h1 className="text-xl font-bold mb-4">{t("timbre.details")}</h1>
-              <p><strong>{t("timbre,reference")}:</strong> {data.findTransaction.timbre.reference}</p>
+              <p><strong>{t("timbre.reference")}:</strong> {data.findTransaction.timbre.reference}</p>
               <p><strong>{t("timbre.session")}:</strong> {data.findTransaction.timbre.price.session.name}</p>
               <p><strong>{t("timbre.type")}:</strong> {data.findTransaction.timbre.type.name}</p>
               <p><strong>{t("timbre.price")}:</strong> {data.findTransaction.timbre.price.price}GNF</p>

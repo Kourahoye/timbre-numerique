@@ -86,7 +86,7 @@ export default function Profil() {
                         )?.showModal();
                       }}
                     >
-                      {t("profil.link")}
+                      {t("profil.timbreLink")}
                     </button>
                     <dialog id={`my_modal_${timbre.id}`} className="modal">
                       <div className="modal-box">
