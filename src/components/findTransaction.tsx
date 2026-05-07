@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { useLazyQuery, useMutation } from "@apollo/client/react";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -72,6 +73,7 @@ mutation MyMutation($action:String!,$id:Int!) {
 }`;
 export default function FindTransaction(){
     const { idTranction } = useParams();
+    const {t} = useTranslation();
     const [loadTransaction, { loading, data,error }] = useLazyQuery<TranscType>(FIND_TRANSACTION)
     const [giveResponse] = useMutation<{endTransactions:{message:string,success:boolean}}>(GIVE_RESPONSE)
     const me  =  localStorage.getItem("me")
@@ -87,16 +89,16 @@ export default function FindTransaction(){
             toast.error("Choix invalid")
         }
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: `${t("confirm.areYouSure")}`,
+      text: `${t("confirm.cannotRevert")}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, proced!",
+      confirmButtonText: `${t("confirm.yesProceed")}`,
     }).then(async (result) => {
       if (!result.isConfirmed) return;
-      const toastId = toast.loading("Please wait...");
+      const toastId = toast.loading(`${t("common.pleaseWait")}`);
       giveResponse({ variables: { id: Number.parseInt(id.toString()),action:choix } })
         .then((res) => {
           const data =res.data 
@@ -133,13 +135,13 @@ export default function FindTransaction(){
         {
             data && (
             <div className="card w-96 bg-base-100 shadow-xl p-6">
-              <h1 className="text-2xl font-bold mb-4">Autoriser la transaction</h1>
-              <h1 className="text-xl font-bold mb-4">Timbre Details</h1>
-              <p><strong>Reference:</strong> {data.findTransaction.timbre.reference}</p>
-              <p><strong>Session:</strong> {data.findTransaction.timbre.price.session.name}</p>
-              <p><strong>Type:</strong> {data.findTransaction.timbre.type.name}</p>
-              <p><strong>Prix:</strong> {data.findTransaction.timbre.price.price}GNF</p>
-              <p className="flex items-center gap-4"><strong>Status:</strong> {data.findTransaction.timbre.used ? <span aria-label="success" className="status status-lg status-error"></span> : <span aria-label="success" className="status status-lg status-success"></span>}</p>
+              <h1 className="text-2xl font-bold mb-4">{t("transaction.title")}</h1>
+              <h1 className="text-xl font-bold mb-4">{t("timbre.details")}</h1>
+              <p><strong>{t("timbre,reference")}:</strong> {data.findTransaction.timbre.reference}</p>
+              <p><strong>{t("timbre.session")}:</strong> {data.findTransaction.timbre.price.session.name}</p>
+              <p><strong>{t("timbre.type")}:</strong> {data.findTransaction.timbre.type.name}</p>
+              <p><strong>{t("timbre.price")}:</strong> {data.findTransaction.timbre.price.price}GNF</p>
+              <p className="flex items-center gap-4"><strong>{t("timbre.status")}:</strong> {data.findTransaction.timbre.used ? <span aria-label="error" className="status status-lg status-error"></span> : <span aria-label="success" className="status status-lg status-success"></span>}</p>
                {
                 data.findTransaction.status == "pending" && data.findTransaction.timbre.ownedBy.username == me && (<div className="space-x-2">
                   <button className='btn btn-info btn-ghost btn-outline mt-5' onClick={()=>answer(Number.parseInt(data.findTransaction.id.toString()),"rejected")}>Non</button>

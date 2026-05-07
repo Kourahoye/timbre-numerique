@@ -5,6 +5,9 @@ import { RiErrorWarningLine } from "react-icons/ri";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { SessionType } from "./types";
+
 
 const GET_TYPE = gql`
 query data {
@@ -29,23 +32,36 @@ mutation BUY {
   }
 }
 `;
+export type TimbreType ={
+  timbreType :{
+    id:number
+    name:string
+  }[]
+};
+export  type timbreTYpes={
+  getTimbrePrice :{
+    price:number
+    session: SessionType 
+  }
+}
 function Home() {
   const {
     loading: loadingType,
     error: errortype,
     data: types,
     refetch: refetchType,
-  } = useQuery(GET_TYPE);
-  const [getPrice, { loading: loadingPrice, data }] = useLazyQuery(GET_TIMBRE_PRICE);
+  } = useQuery<TimbreType>(GET_TYPE);
+  const [getPrice, { loading: loadingPrice, data }] = useLazyQuery<timbreTYpes>(GET_TIMBRE_PRICE);
   const [buy]= useMutation(BUY)
   const [_type,setType]=useState("");
+  const {t} = useTranslation();
 
   return (
     <>
       <div className="hero h-screen bg-base-200">
         <div className="hero-content text-center">
           <div className="w-full">
-            <h1 className="text-5xl font-bold">Get your timbre</h1>
+            <h1 className="text-5xl font-bold">{t("common.getYours")}</h1>
             <div className="py-6 flex items-center justify-center">
               <QrCode />
             </div>
@@ -55,33 +71,33 @@ function Home() {
               onSubmit={(e) => {
                 e.preventDefault();
                 Swal.fire({
-                  title: "Submit your card",
-                  input: "text",
-                  
+                  title: `${t("confirm.submitCard")}`,
+                  input: "text",    
                   inputAttributes: { autocapitalize: "on" },
                   showCancelButton: true,
-                  confirmButtonText: "Payer",
+                  confirmButtonText: `${t('timbre.buy')}`,
                   showLoaderOnConfirm: true,
                   footer:'<strong>This is fake</strong>',
                   preConfirm: async (login) => {
                     if (login) {
                       return;
                     } else {
-                      Swal.showValidationMessage(`Fournissez les infos`);
+                      Swal.showValidationMessage(`${t('timbre.provideInfo')}`);
                     }
                   },
                   allowOutsideClick: () => !Swal.isLoading(),
                 }).then((result) => {
                   if (result.isConfirmed){
                     // const _type = document.querySelector("#type")
-                    const toastId = toast.loading("Please wait...")
+                    const toastId = toast.loading(`${t("common.pleaseWait")}`)
                     if (_type ==null || _type =="" ){
                       toast.error("Aucun type selectionner")
+                        toast.error(`${t("timbre.noType")}`)
                       return
                     }
                       buy({variables:{id:Number.parseInt(_type.toString())}}).then((res)=>{
                           if(res.data){
-                          toast.success("Payement effectuer",{id:toastId})
+                          toast.success(`${t("timbre.paymentSuccess")}`,{id:toastId})
                         }
                       }).catch((error)=>{
                         toast.success(error.message,{id:toastId})
@@ -92,7 +108,7 @@ function Home() {
             >
               <div className="flex flex-col items-start justify-start gap-2 w-full">
                 <label className="label" htmlFor="type">
-                  Type timbre
+                  {t("timbre.type")}
                 </label>
                 <select
                   name="type"
@@ -104,7 +120,6 @@ function Home() {
                     getPrice({
                       variables: { id: Number.parseInt(e.target.value) },
                     }).then((res) => {
-                        // console.log(res);
                         if(res.data){                  
                           setType(e.target.value)
                         }
@@ -112,13 +127,12 @@ function Home() {
                       })
                       .catch((error) => {
                         console.log(error);
-                        toast.error("Ce type n'est pas encore disponible dans la session courante");
-                        // toast.error("PriceAssignation matching query does not exist")
+                        toast.error(`${t("session.typeNotAvailable")}`);
                       })
                   }
                 >
                   <option disabled value={"default"}>
-                    Pick the timbre type
+                    {t("timbre.pickTimbreType")}
                   </option>
                   {types &&
                     types.timbreType.map((type) => (
@@ -126,7 +140,6 @@ function Home() {
                         {type.name}
                       </option>
                     ))}
-                  {/* {types && console.log(types)} */}
                 </select>
                 {loadingType && (
                   <span className="loading loading-xs loading-spinner"></span>
@@ -141,7 +154,7 @@ function Home() {
 
               <div className="input w-full p-2">
                 <span className="border-r-2 border-r-black px-4 text-black text-lg">
-                  Prix
+                  {t("timbre.type")}
                 </span>
                 <span className="textarea-md">
                   {data && data.getTimbrePrice.price}
@@ -151,10 +164,10 @@ function Home() {
                 )}
               </div>
               {data ? (
-                <button className="btn btn-primary">Buy</button>
+                <button className="btn btn-primary">{t("timbre.buy")}</button>
               ) : (
                 <button className="btn btn-primary" disabled>
-                  Buy
+                  {t("timbre.buy")} 
                 </button>
               )}
             </form>

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import type { PriceAssignation, PriceType, SessionType } from "./types";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
 
 const GET_SESSION = gql`
 query data {
@@ -89,6 +90,7 @@ mutation DELETE_PRICE($id:Int!) {
 }
 `
 export default function Price() {
+  const {t} = useTranslation();
   const [deletePrice] = useMutation<{deletePrice:{success:boolean,message:string}}>(DELETE_PRICE)
   const [plageTime,setPlageTime] = useState<string>("current")
   const {
@@ -114,16 +116,16 @@ export default function Price() {
 
   const priceDelete = (id:number) => {
       Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
+    title: `${t("confirm.areYouSure")}`,
+    text: `${t("confirm.cannotRevert")}`,
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!"
+    confirmButtonText: `${t("confirm.yesDelete")}`
   }).then(async (result) => {
     if (!result.isConfirmed) return
-    const toastId = toast.loading("Please wait...")
+    const toastId = toast.loading(`${t("common.pleaseWait")}`)
     deletePrice({variables: { id: id }}).then((res) => {
         const data = res.data
         if (data){
@@ -144,7 +146,7 @@ export default function Price() {
         toast.error(error.message,{id: toastId});
         return
       }
-      toast.error("Erreur imprevue!",{id: toastId});
+      toast.error(`${t("common.unexpectedError")}`,{id: toastId});
     });
   })
   }
@@ -159,7 +161,7 @@ export default function Price() {
             </button>
           </form>
           <div className="p-6">
-            <h1 className="text-2xl font-bold text-center mb-4">New Price</h1>
+            <h1 className="text-2xl font-bold text-center mb-4">{t("pricing.newPrice")}</h1>
             <form
               method="post"
               className="space-y-3 flex flex-col items-center"
@@ -177,10 +179,10 @@ export default function Price() {
                   _type == null ||
                   _price == null
                 ) {
-                  toast.error("Remplissez le formulaire");
+                  toast.error(`${t("pricing.fillForm")}`);
                   return;
                 }
-                const toastId = toast.loading("Please wait...");
+                const toastId = toast.loading(`${t("common.pleaseWait")}`);
                 setTimbrePrice({
                   variables: {
                     price: Number.parseInt(_price.toString()),
@@ -193,17 +195,17 @@ export default function Price() {
                     refetchPrices()
                     if(called)refetchAllPrices()
                     if (data) {
-                      toast.success("Prix assigner avec success", {
+                      toast.success(`${t("price.priceAssigned")}`, {
                         id: toastId,
                       });
-                    } else {
-                      toast.error(data.message, { id: toastId });
+                    } else if (res.error) {
+                      toast.error(res.error.message, { id: toastId });
                     }
                   })
                   .catch((err) => {
                     if (err.message.includes("UNIQUE constraint failed")) {
                       toast.error(
-                        "Un prix est deja assigner pour cette session pour ce type de timbre",
+                        `${t("price.duplicatePrice")}`,
                         { id: toastId },
                       );
                       return;
@@ -220,7 +222,7 @@ export default function Price() {
                   defaultValue={"default"}
                 >
                   <option disabled value={"default"}>
-                    Pick the session
+                    {t("pricing.pickSession")}
                   </option>
                   {sessions &&
                     sessions.sessions.map((session) => (
@@ -248,7 +250,7 @@ export default function Price() {
                   defaultValue={"default"}
                 >
                   <option disabled value={"default"}>
-                    Pick the timbre type
+                    {t("pricing.pickTimbreType")}
                   </option>
                   {types &&
                     types.timbreType.map((type) => (
@@ -270,11 +272,11 @@ export default function Price() {
               </div>
               <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text">Prix</span>
+                  <span className="label-text"> {t("pricing.price")}</span>
                 </label>
                 <input
                   type="number"
-                  placeholder="Type here"
+                  placeholder={t("common.typeHere")}
                   name="price"
                   required
                   className="input input-bordered w-full"
@@ -284,7 +286,7 @@ export default function Price() {
                 type="submit"
                 className="btn btn-info btn-sm btn-outline btn-ghost"
               >
-                <span>Set price</span>
+                <span>{t("pricing.setPrice")}</span>
                 {loading && (
                   <span className="loading loading-spinner loading-sm"></span>
                 )}
@@ -297,14 +299,14 @@ export default function Price() {
         <div className="card bg-base-100 shadow-xl p-6 ml-4">
           <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
             <section>
-              <span>Pricing</span>
+              <span>{t("pricing.title")}</span>
               {
                 plageTime == "current" &&
-              <div className="badge badge-accent badge-xs ml-2">This year</div>
+              <div className="badge badge-accent badge-xs ml-2">{t("pricing.thisYear")}</div>
             }
               {
                 plageTime == "all" &&
-                <div className="badge badge-accent badge-xs ml-2">All years</div>
+                <div className="badge badge-accent badge-xs ml-2">{t("pricing.allYears")}</div>
               }
             </section>
 
@@ -324,7 +326,7 @@ export default function Price() {
             <div className="tabs tabs-lift">
               <label className="tab">
                 <input type="radio" name={`my_tabs`} defaultChecked  onChange={()=>setPlageTime("current")} />
-                <span className="font-semibold">This year</span>
+                <span className="font-semibold">{t("pricing.thisYear")}</span>
               </label>
               <div className="tab-content bg-base-100 border-base-300 p-6">
                <div className="overflow-x-auto">
@@ -333,28 +335,28 @@ export default function Price() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Session</th>
-                  <th>Type</th>
-                  <th>Price</th>
-                  <th>Created_at</th>
-                  <th>updated_at</th>
-                  <th>Created_by</th>
-                  <th>updated_by</th>
-                  <th>Actions</th>
+                  <th>{t("session.name")}</th>
+                  <th>{t("timbre.type")}</th>
+                  <th>{t("timbre.price")}</th>
+                  <th>{t("session.createdAt")}</th>
+                  <th>{t("session.updatedAt")}</th>
+                  <th>{t("session.createdBy")}</th>
+                  <th>{t("session.updatedBy")}</th>
+                  <th>{t("session.actions")}</th>
                 </tr>
               </thead>
               <tbody>
                 {loadingPrices && (
                   <tr>
                     <td className="text-center" colSpan={9}>
-                      <span className="loading loading-lg loading-spinner"></span>{" "}
+                      <span className="loading loading-lg loading-spinner"></span>
                     </td>
                   </tr>
                 )}
                 {prices && prices?.activeSessionPrice.length === 0 && (
                   <tr>
                     <td className="text-xl font-mono text-center font-semibold" colSpan={9}>
-                      Aucun prix trouvé pour l'annee
+                      {t("pricing.noPriceYear")}
                     </td>
                   </tr>
                 )}
@@ -397,7 +399,7 @@ export default function Price() {
               </div>
               <label className="tab">
                 <input type="radio" name={`my_tabs`} onChange={()=>setPlageTime("all")} />
-                <span className="font-semibold">All years</span>
+                <span className="font-semibold">{t("pricing.allYears")}</span>
               </label>
               <div className="tab-content bg-base-100 border-base-300 p-6">
                   <div className="overflow-x-auto">
@@ -406,34 +408,34 @@ export default function Price() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Session</th>
-                  <th>Type</th>
-                  <th>Price</th>
-                  <th>Created_at</th>
-                  <th>updated_at</th>
-                  <th>Created_by</th>
-                  <th>updated_by</th>
-                  <th>Actions</th>
+                  <th>{t("session.name")}</th>
+                  <th>{t("timbre.type")}</th>
+                  <th>{t("timbre.price")}</th>
+                  <th>{t("session.createdAt")}</th>
+                  <th>{t("session.updatedAt")}</th>
+                  <th>{t("session.createdBy")}</th>
+                  <th>{t("session.updatedBy")}</th>
+                  <th>{t("session.actions")}</th>
                 </tr>
               </thead>
               <tbody>
                 {
                   !called && <tr><td colSpan={9} className="text-center">
-                    <button type="button" className="btn btn-outline btn-accent btn-ghost btn-wide" onClick={()=>loadAllPrices()} >Load all prices</button>
+                    <button type="button" className="btn btn-outline btn-accent btn-ghost btn-wide" onClick={()=>loadAllPrices()} >{t("pricing.loadAllPrices")}</button>
                     </td>
                     </tr>
                 }
                 {loadingAll && (
                   <tr>
                     <td className="text-center" colSpan={9}>
-                      <span className="loading loading-lg loading-spinner"></span>{" "}
+                      <span className="loading loading-lg loading-spinner"></span>
                     </td>
                   </tr>
                 )}
                 {allPrices && allPrices?.prices.length === 0 && (
                   <tr>
                     <td className="text-xl font-mono text-center font-semibold" colSpan={9}>
-                      Aucun prix trouvé
+                     {t("price.noPrice")}
                     </td>
                   </tr>
                 )}

@@ -1,0 +1,243 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "pleaseWait": "Please wait...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "home": "Home",
+    "search": "Search",
+    "see": "See",
+    "unexpectedError": "Unexpected error!",
+    "getYours":"Get your stamp",
+    "create":"Créer",
+    "update":"Update",
+    "typeHere": "Type here",
+    "change": "Change",
+    "fieldRequired":"This field is required"
+  },
+
+  "nav": {
+    "appName": "Digital Stamp",
+    "authentication": "Authentication",
+    "sessions": "Sessions",
+    "timbreType": "Stamp Type",
+    "consumeTimbre": "Consume Stamp",
+    "pricing": "Pricing",
+    "myTransactions": "My transactions",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "language": "Language",
+    "selectLanguage": "Select Language",
+    "roles":"Roles",
+    "stamps":"Consume stamp"
+  },
+
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "loginTitle": "Sign In",
+    "registerTitle": "Create an account",
+    "username": "Username",
+    "usernamePlaceholder": "Username",
+    "email": "Email",
+    "emailPlaceholder": "example@mail.com",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "noAccount": "Don't have an account?",
+    "alreadyAccount": "Already have an account?",
+    "connectSuccess": "Connected successfully",
+    "invalidCredentials": "Invalid credentials",
+    "serverError": "Server error, please try again.",
+    "accountCreated": "Account created successfully!",
+    "sessionExpired": "Your session has expired, please log in again"
+  },
+
+  "errors": {
+    "403": {
+      "code": "403",
+      "title": "Access Denied",
+      "description": "You do not have permission to access this page.",
+      "asciiLine1": "│ ERROR: ROUTE Forbidden │",
+      "asciiLine2": "│ STATUS: 403            │"
+    },
+    "404": {
+      "code": "404",
+      "title": "Page Not Found",
+      "description": "The page you are looking for seems to have disappeared from the system… or it never existed.",
+      "asciiLine1": "│ ERROR: ROUTE LOST │",
+      "asciiLine2": "│ STATUS: 404       │"
+    },
+    "redirectIn": "Automatic redirect in {{time}} seconds..."
+  },
+
+  "roles": {
+    "title": "Roles",
+    "pickUser": "Pick the user",
+    "pickRole": "Pick the role",
+    "admin": "Admin",
+    "controller": "Controller",
+    "simpleUser": "Simple user",
+    "assignRole": "Assign Role",
+    "assigning": "Assigning role...",
+    "selectBoth": "Please select both user and role.",
+    "assignSuccess": "Role assigned successfully",
+    "assignError": "Failed to assign role.",
+    "manageRoles": "Manage Roles"
+  },
+
+  "session": {
+    "title": "Sessions",
+    "name": "Name",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "active": "Active",
+    "createdAt": "Created at",
+    "updatedAt": "Updated at",
+    "createdBy": "Created by",
+    "updatedBy": "Updated by",
+    "actions": "Actions",
+    "noSession": "No session found",
+    "createSession": "Create a new session",
+    "saveSession": "Save",
+    "addSuccess": "Session {{name}} added",
+    "duplicateName": "A session with this name already exists",
+    "startBeforeEnd": "Start date must be before end date",
+    "fillFields": "Error: Please fill in the fields",
+    "deleteConfirm": "Do you want to delete this session?",
+    "toggleActivate": "Do you want to activate this session.<br/>The active session will be deactivated",
+    "toggleDeactivate": "Do you want to deactivate this session.<br/>All sessions will be deactivated",
+    "modification": "Modification!",
+    "newName": "New name",
+    "changeSuccess": "Change applied",
+    "thisYear": "This year",
+    "allYears": "All years",
+    "selectSession":"Select the session to modify"
+  },
+
+  "timbre": {
+    "title": "Stamp Types",
+    "getYourTimbre": "Get your stamp",
+    "timbreType": "Stamp type",
+    "pickTimbreType": "Pick the stamp type",
+    "price": "Price",
+    "buy": "Buy",
+    "reference": "Reference",
+    "type": "Type",
+    "status": "Status",
+    "used": "Used",
+    "available": "Available",
+    "usedYes": "Yes",
+    "usedNo": "No",
+    "noType": "No stamp type found",
+    "createType": "Create a stamp type",
+    "typeNamePlaceholder": "Stamp type",
+    "typeNameRequired": "The stamp type name is required.",
+    "typeExists": "This stamp type already exists.",
+    "createTypeSuccess": "Stamp type created successfully!",
+    "modifyType": "Edit stamp type",
+    "typeNotAvailable": "This type is not yet available in the current session",
+    "submitCard": "Submit your card",
+    "pay": "Pay",
+    "provideInfo": "Provide the information",
+    "noTypeSelected": "No type selected",
+    "paymentSuccess": "Payment successful",
+    "details": "Stamp details",
+    "session":"Session"
+  },
+
+  "transaction": {
+    "title": "Authorize transaction",
+    "timbreDetails": "Stamp Details",
+    "session": "Session",
+    "price": "Price",
+    "noTransaction": "No transaction",
+    "myTransactions": "My Transactions",
+    "owner": "Owner",
+    "amount": "Amount",
+    "status": {
+      "accepted": "Accepted",
+      "pending": "Pending",
+      "rejected": "Rejected"
+    },
+    "accept": "Yes",
+    "reject": "No",
+    "invalidChoice": "Invalid choice",
+    "proceed": "Yes, proceed!",
+    "requestSuccess": "Transaction requested\n Awaiting confirmation",
+    "consume": "Consume"
+  },
+
+  "pricing": {
+    "title": "Pricing",
+    "thisYear": "This year",
+    "allYears": "All years",
+    "newPrice": "New Price",
+    "setPrice": "Set price",
+    "pickSession": "Pick the session",
+    "pickTimbreType": "Pick the stamp type",
+    "session": "Session",
+    "type": "Type",
+    "price": "Price",
+    "createdAt": "Created at",
+    "updatedAt": "Updated at",
+    "createdBy": "Created by",
+    "updatedBy": "Updated by",
+    "actions": "Actions",
+    "noPriceYear": "No price found for this year",
+    "noPrice": "No price found",
+    "loadAllPrices": "Load all prices",
+    "fillForm": "Please fill in the form",
+    "priceAssigned": "Price assigned successfully",
+    "duplicatePrice": "A price is already assigned for this session and stamp type",
+    "deleteConfirm": "Are you sure you want to delete this price?"
+  },
+
+  "notifications": {
+    "title": "Unread notifications",
+    "markAsRead": "Mark as read",
+    "showAll": "Show all notifications",
+    "pleaseWait": "Please wait.."
+  },
+
+  "profil": {
+    "title": "Profile",
+    "username": "Username",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "myTimbres": "MY STAMPS LIST",
+    "noTimbre": "No stamp found.",
+    "timbreLink": "Link",
+    "timbreTitle": "Stamp link!",
+    "qrCode": "QR Code",
+    "textCode": "Text Code",
+    "code": "Code",
+    "close": "Close"
+  },
+
+  "scan": {
+    "code": "Code",
+    "search": "Search",
+    "provideCode": "Please provide the code",
+    "timbreDetails": "Stamp Details",
+    "reference": "Reference",
+    "type": "Type",
+    "status": "Status",
+    "consume": "Consume",
+    "selectTimbre": "Please select a stamp"
+  },
+
+  "confirm": {
+    "areYouSure": "Are you sure?",
+    "cannotRevert": "You won't be able to revert this!",
+    "yesDelete": "Yes, delete it!",
+    "yesProceed": "Yes, proceed!",
+    "yesInactive": "Yes, deactivate it!",
+    "yesActive": "Yes, activate it!",
+    "pay":"Pay"
+  }
+}

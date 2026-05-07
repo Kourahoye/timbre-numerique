@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import qr from "../assets/qr.svg";
 import type { MeType, Timbres } from "./types";
+import { useTranslation } from "react-i18next";
+
 export default function Profil() {
+  const {t} = useTranslation();
   const { loading, error, data } = useQuery<MeType>(ME_QUERY);
   const [loadTimbre, { called, loading: loading2, data: dataTimbre }] =
     useLazyQuery<Timbres>(MY_TIMBRE_QUERY);
@@ -17,33 +20,33 @@ export default function Profil() {
     <>
       <div className="min-h-screen grid grid-cols-1 xl:grid-cols-3 bg-base-200 mx-auto gap-4 p-4">
         <div className="card w-96 bg-base-100 shadow-xl p-6">
-          <h1 className="text-3xl font-bold mb-4">Profil</h1>
+          <h1 className="text-3xl font-bold mb-4">{t("profil.title")}</h1>
           {loading && (
             <div className="w-20 h-20 flex justify-center items-center m-auto">
               <span className="loading loading-spinner loading-lg"></span>
             </div>
           )}
-          {error && <p className="text-error">Error: {error.message}</p>}
+          {error && <p className="text-error">{t("common.error")}:<br/> {error.message}</p>}
           {data != undefined && (
             <div>
               <p>
-                <strong>Username:</strong> {data.me.username ?? ""}
+                <strong>{t("auth.username")}:</strong> {data.me.username ?? ""}
               </p>
               <p>
-                <strong>First Name:</strong> {data.me.firstName ?? "firstname"}
+                <strong>{t("profil.firstName")}:</strong> {data.me.firstName ?? "firstname"}
               </p>
               <p>
-                <strong>Last Name:</strong> {data.me.lastName ?? "lastname"}
+                <strong>{t("profil.lastName")}:</strong> {data.me.lastName ?? "lastname"}
               </p>
               <p>
-                <strong>Email:</strong> {data.me.email ?? "email"}
+                <strong>{t("auth.email")}:</strong> {data.me.email ?? "email"}
               </p>
             </div>
           )}
         </div>
         {data != undefined && (
           <div className="card bg-base-100 shadow-xl p-6 xl:col-span-2">
-            <h1 className="font-bold text-3xl">LIST DES TIMBRES</h1>
+            <h1 className="font-bold text-3xl">{t("profil.myTimbres")}</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {loading2 && (
                 <div className="w-20 h-20 flex justify-center items-center m-auto">
@@ -52,7 +55,7 @@ export default function Profil() {
               )}
               {called && dataTimbre && dataTimbre.myTimbres.length === 0 && (
                 <p className="text-center text-gray-500">
-                  Aucun timbre trouvé.
+                  {t("profil.noTimbre")}
                 </p>
               )}
               {dataTimbre &&
@@ -66,12 +69,12 @@ export default function Profil() {
                       {timbre.type.name}
                     </h2>
                     <p>
-                      <span className="font-semibold text-xl">Reference: </span>
+                      <span className="font-semibold text-xl">{t("timbre.reference")}: </span>
                       {timbre.reference}
                     </p>
                     <p>
-                      <span className="font-semibold text-xl">Used:</span>{" "}
-                      {timbre.used ? "Yes" : "No"}
+                      <span className="font-semibold text-xl">{t("timbre.used")}:</span>
+                      {timbre.used ? t("timbre.usedYes") : t("timbre.usedNo")}
                     </p>
                     <button
                       className="btn"
@@ -83,11 +86,11 @@ export default function Profil() {
                         )?.showModal();
                       }}
                     >
-                      Link
+                      {t("profil.link")}
                     </button>
                     <dialog id={`my_modal_${timbre.id}`} className="modal">
                       <div className="modal-box">
-                        <h3 className="font-bold text-lg">Lien du timbre!</h3>
+                        <h3 className="font-bold text-lg">{t("profil.timbreLink")}</h3>
                         <div className="tabs tabs-lift">
                           <label className="tab">
                             <input
@@ -97,14 +100,13 @@ export default function Profil() {
                             />
                             <img
                               src={qr}
-                              alt="qr code"
+                              alt={t("profil.qrCode")}
                               className="size-4 me-2"
                             />
-                            <span className="font-semibold">QrCode</span>
+                            <span className="font-semibold">{t("profil.qrCode")}</span>
                           </label>
                           <div className="tab-content bg-base-100 border-base-300 p-6">
                             <p className="py-4 flex items-center justify-center">
-                              {" "}
                               <QRCodeCanvas
                                 value={`https://swimmer-bullwhip-rearview.ngrok-free.dev/scan/${timbre.qrCode}`}
                                 size={256}
@@ -116,15 +118,15 @@ export default function Profil() {
                             <span className="font-mono tracking-tight text-xs mr-0.5">
                               abc
                             </span>
-                            <span className="font-semibold">Text Code</span>
+                            <span className="font-semibold">{t("profil.textCode")}</span>
                           </label>
                           <div className="tab-content bg-base-100 border-base-300 p-6">
-                            Code: {timbre.qrCode}
+                            {t("profil.code")}: {timbre.qrCode}
                           </div>
                         </div>
                         <div className="modal-action">
                           <form method="dialog">
-                            <button className="btn">Close</button>
+                            <button className="btn">{t("profil.close")}</button>
                           </form>
                         </div>
                       </div>

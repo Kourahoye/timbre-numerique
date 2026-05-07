@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
+import { useTranslation } from "react-i18next";
 import { RiRefreshLine } from "react-icons/ri";
 
 const MY_TRANSACTIONS = gql`
@@ -55,6 +56,7 @@ export type TranscList = {
   }[];
 };
 export default function MyTransactions() {
+  const {t} = useTranslation();
   const { loading, error, data, refetch } =
     useQuery<TranscList>(MY_TRANSACTIONS);
   return (
@@ -85,7 +87,7 @@ export default function MyTransactions() {
         {data && data.myTransactions.length == 0 ? <div className="text-xl font-mono text-center">Aucune transaction</div>  : (
           <ul className="list bg-base-100 rounded-box shadow-md">
             <li className="p-4 pb-2 text-xs opacity-60 tracking-widest uppercase font-semibold">
-              Mes Transactions
+              {t("transaction.myTransactions")}
             </li>
 
             {data && data.myTransactions.map((transaction) => (
@@ -118,17 +120,17 @@ export default function MyTransactions() {
 
                   <div className="text-sm opacity-60 flex flex-wrap gap-x-4 gap-y-1 mt-1">
                     <span>
-                      Type :{" "}
+                      {t("timbre.type")} :
                       <strong>{transaction.timbre.type?.name ?? "—"}</strong>
                     </span>
                     <span>
-                      Propriétaire :{" "}
+                      {t("timbre.owner")} :
                       <strong>
                         {transaction.timbre.ownedBy?.username ?? "—"}
                       </strong>
                     </span>
                     <span>
-                      Montant :{" "}
+                      {t("timbe.amount")} :
                       <strong>
                         {transaction.timbre.price
                           ? `${transaction.timbre.price.price}`
@@ -143,16 +145,16 @@ export default function MyTransactions() {
                   {transaction.timbre.used ? (
                     <span
                       className="status status-error status-lg"
-                      aria-label="Utilisé"
+                      aria-label={t("timbre.used")}
                     />
                   ) : (
                     <span
                       className="status status-success status-lg"
-                      aria-label="Disponible"
+                      aria-label={t("timbre.available")}
                     />
                   )}
                   <span className="text-xs opacity-50">
-                    {transaction.timbre.used ? "Utilisé" : "Dispo"}
+                    {transaction.timbre.used ? t("timbre.used") : t("timbre.used")}
                   </span>
                 </div>
               </li>

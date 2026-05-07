@@ -19,7 +19,6 @@ import FindTransaction from "./components/findTransaction";
 import Transaction from "./components/transaction";
 import MyTransactions from "./components/myTransactions";
 import { AuthProvider } from "./components/auth";
-import "./i18n";
 
 function App() {
   return (

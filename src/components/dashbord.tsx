@@ -7,7 +7,7 @@ import { Can } from "./can";
 import { useNotifications } from "./hooks/useNotification";
 import { useAuth } from "./auth";
 import LanguageSwitcher from "./languageSeletor";
-
+import { useTranslation } from "react-i18next";
 
 
 const LOGOUT = gql`
@@ -19,6 +19,7 @@ mutation RevokeToken($refreshToken: String!) {
 }
 `
 export default function Dashboard({ children }: { children: React.ReactNode }) {
+      const {t} = useTranslation();
      const { unreadCount, loading } = useNotifications();
     //  const [me,setMe]  =  useState(localStorage.getItem("me"))
      const [logout] = useMutation(LOGOUT)
@@ -30,6 +31,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           localStorage.removeItem("access")
           localStorage.removeItem("refresh")
           // setMe("")
+          localStorage.removeItem("me")
           apolloClient.clearStore()
           navigate("/login")
         })
@@ -50,41 +52,41 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           me && <li><Link className="btn btn-circle btn-soft btn-wide btn-outline btn-info uppercase" to="/profil">{me.username}</Link></li>
         }
         <li>
-          <a>Authentication</a>
+          <a>{t('nav.authentication')}</a>
           <ul className="p-2">
             {
-              me?.username != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>  :(
+               me !=null ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t("auth.logout")}</button>  :(
                 <>
-                <li><Link to="/register">Register</Link></li>
-                <li><Link to="/login">Login</Link></li>
+                <li><Link to="/register">{t('auth.register')}</Link></li>
+                <li><Link to="/login">{t('auth.login')}</Link></li>
                 </>
               )
             }
              <Can permission="manage_users">
-                  <li><Link to="/roles">Gesion des Roles</Link></li>
-         </Can>
+                  <li><Link to="/roles">{t('nav.roles')}</Link></li>
+            </Can>
           </ul>
         </li>
       <Can permission="add_session">
-      <li><Link to="/sessions" >Sessions</Link></li>
+      <li><Link to="/sessions" >{t('nav.sessions')}</Link></li>
       </Can>
       <Can permission="add_typetimbre">
-      <li><Link to="/timbre-type" >Timbre Type</Link></li>
+      <li><Link to="/timbre-type" >{t('nav.timbreType')}</Link></li>
       </Can>
       <Can permission="scan">
-      <li><Link to="/scan" >Timbre</Link></li>
+      <li><Link to="/scan" >{t('nav.stamps')}</Link></li>
       </Can>
       <Can permission="scan">
-        <li><Link to="/pricing" >Pricing</Link></li>
+        <li><Link to="/pricing" >{t('nav.pricing')}</Link></li>
       </Can>
       
       <Can permission="">
-          <li><Link to="/mytransactions" >Mes transactions</Link></li>
+          <li><Link to="/mytransactions" >{t("nav.myTransactions")}</Link></li>
       </Can>
       
       </ul>
     </div>
-    <Link className="btn btn-ghost text-xl font-mono" to="/">Timbre Numerique</Link>
+    <Link className="btn btn-ghost text-xl font-mono" to="/">{t('nav.appName')}</Link>
 
   </div>
   <div className="navbar-center hidden lg:flex">
@@ -92,42 +94,40 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       {/* <li><Link to="/profil">Profil</Link></li> */}
       <li>
         <details>
-          <summary>Authentication</summary>
+          <summary>{t('nav.authentication')}</summary>
           <ul className="p-2 bg-base-100 w-40 z-1">
              {
-               me?.username != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>  :(
+               me?.username != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t('auth.logout')}</button>  :(
                 <>
-                <li><Link to="/register">Register</Link></li>
-                <li><Link to="/login">Login</Link></li>
+                <li><Link to="/register">{("auth.register")}</Link></li>
+                <li><Link to="/login">{t('auth.login')}</Link></li>
                 </>
               )
             }
             <Can permission="manage_users">
-                  <li><Link to="/roles">Gesion des Roles</Link></li>
+                  <li><Link to="/roles">{t('nav.roles')}</Link></li>
          </Can>
           </ul>
         </details>
       </li>
       <Can permission="add_session">
-      <li><Link to="/sessions" >Sessions</Link></li>
+      <li><Link to="/sessions" >{t('nav.sessions')}</Link></li>
       </Can>
       <Can permission="add_typetimbre">
-      <li><Link to="/timbre-type" >Timbre Type</Link></li>
+      <li><Link to="/timbre-type" >{t('nav.timbreType')}</Link></li>
       </Can>
       <Can permission="scan">
-      <li><Link to="/scan" >Consomer Timbre</Link></li>
+      <li><Link to="/scan" >{t('nav.stamps')}</Link></li>
       </Can>
       <Can permission="scan">
-        <li><Link to="/pricing" >Pricing</Link></li>
+        <li><Link to="/pricing" >{t('nav.pricing')}</Link></li>
       </Can>
       
      {
       me &&
-          <li><Link to="/mytransactions" >Mes transactions</Link></li>
+          <li><Link to="/mytransactions" >{t("nav.myTransactions")}</Link></li>
      }
       
-      
-     
     </ul>
   </div>
   <div className="navbar-end">
@@ -166,14 +166,14 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
         <li>
            {
             me ? <Link className="btn btn-circle btn-sm btn-soft btn-wide btn-outline btn-info uppercase text-md" to="/profil">{me.username}</Link>
-            : <Link to="/login" >Login</Link>
+            : <Link to="/login" >{t('auth.login')}</Link>
           }
         </li>
         <li>
           <LanguageSwitcher />
         </li>
         <li>
-          {me?.username != "" && <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >Logout</button>}
+          {me?.username != "" && <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t("auth.logout")}</button>}
         </li>
       </ul>
     </div>
