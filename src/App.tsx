@@ -20,6 +20,7 @@ import Transaction from "./components/transaction";
 import MyTransactions from "./components/myTransactions";
 import { AuthProvider } from "./components/auth";
 import DashboardInfo from "./components/dashboard";
+import DashboardFull from "./components/dashboardfull";
 
 function App() {
   return (
@@ -144,6 +145,14 @@ function App() {
                 <ProtectedRoute permission="">
                     <DashboardInfo />
                 </ProtectedRoute>
+                }
+                />
+                <Route 
+                path="/dashboard-full"
+                element={
+                  <ProtectedRoute permission="">
+                    <DashboardFull />
+                  </ProtectedRoute>
                 }
                 />
           </Routes>

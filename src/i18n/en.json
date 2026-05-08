@@ -16,7 +16,8 @@
     "update":"Update",
     "typeHere": "Type here",
     "change": "Change",
-    "fieldRequired":"This field is required"
+    "fieldRequired":"This field is required",
+    "refresh":"↺ Refresh"
   },
 
   "nav": {
@@ -53,7 +54,8 @@
     "invalidCredentials": "Invalid credentials",
     "serverError": "Server error, please try again.",
     "accountCreated": "Account created successfully!",
-    "sessionExpired": "Your session has expired, please log in again"
+    "sessionExpired": "Your session has expired, please log in again",
+    "users":"Users" 
   },
 
   "errors": {
@@ -115,7 +117,9 @@
     "changeSuccess": "Change applied",
     "thisYear": "This year",
     "allYears": "All years",
-    "selectSession":"Select the session to modify"
+    "session":"Session",
+    "selectSession":"Select the session to modify",
+    "allSessions":"All Sessions"
   },
 
   "timbre": {
@@ -127,9 +131,13 @@
     "buy": "Buy",
     "reference": "Reference",
     "type": "Type",
+    "stamps":"Stamps",
     "status": "Status",
     "used": "Used",
+    "used_s": "Used",
+    "used_s_stamp": "used stamps",
     "available": "Available",
+    "available_s": "Available",
     "usedYes": "Yes",
     "usedNo": "No",
     "noType": "No stamp type found",
@@ -146,7 +154,9 @@
     "noTypeSelected": "No type selected",
     "paymentSuccess": "Payment successful",
     "details": "Stamp details",
-    "session":"Session"
+    "session":"Session",
+    "total":"Total timbres",
+    "revenus":"Revenus"
   },
 
   "transaction": {
@@ -200,7 +210,9 @@
     "title": "Unread notifications",
     "markAsRead": "Mark as read",
     "showAll": "Show all notifications",
-    "pleaseWait": "Please wait.."
+    "pleaseWait": "Please wait..",
+    "notifications":"Notifications",
+    "unRead":"unread"
   },
 
   "profil": {
@@ -239,5 +251,38 @@
     "yesInactive": "Yes, deactivate it!",
     "yesActive": "Yes, activate it!",
     "pay":"Pay"
-  }
+  },
+   "dashboard": {
+  "name": "Dashboard",
+  "desc": "Overview · real-time data",
+
+  "overview": "Overview",
+  "survey": "Summary",
+  "bySession": "By session",
+  "bySessionStamp": "Stamps by session",
+  "evolution": "Evolution",
+
+  "globalUse": "Global usage",
+  "repartitionTransaction": "Transaction distribution",
+  "revenueBySession": "Revenue by session",
+  "stampByType": "Stamps by type",
+  "transactionsTrend": "Transaction trends",
+  "activeSession": "Active session",
+  "realTime": "Real-time",
+
+  "used": "Used",
+  "available": "Available",
+  "accepted": "Accepted",
+  "pending": "Pending",
+  "rejected": "Rejected",
+
+  "percentageUsed": "used",
+  "revenue": "Revenue",
+  "sessionRevenue": "Revenue by session (GNF)",
+
+  "noData": "No data available",
+  "refreshing": "Refreshing...",
+  "system": "Stamp System",
+  "version": "dashboard v2"
+}
 }

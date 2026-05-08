@@ -16,7 +16,9 @@
     "update":"Modifier",
     "typeHere":"Tapez ici",
     "change": "Changer",
-    "fieldRequired":"Ce champ est requis"
+    "fieldRequired":"Ce champ est requis",
+    "refresh":"↺ Actualiser",
+    "total":"Total timbres"
   },
 
   "nav": {
@@ -53,7 +55,8 @@
     "invalidCredentials": "Identifiants invalides",
     "serverError": "Erreur serveur, réessayez.",
     "accountCreated": "Compte créé avec succès !",
-    "sessionExpired": "Votre session a expirée, veuillez vous reconnecter"
+    "sessionExpired": "Votre session a expirée, veuillez vous reconnecter",
+     "users":"Utilisateurs" 
   },
 
   "errors": {
@@ -116,11 +119,13 @@
     "thisYear": "Cette année",
     "allYears": "Toutes les années",
     "selectSession":"Selectionez la session à modifier",
-    "session":"Session"
+    "session":"Session",
+    "allSessions":"Toutes les sessions"
   },
 
   "timbre": {
     "title": "Types de timbres",
+    "stamps":"Timbres",
     "getYourTimbre": "Obtenez votre timbre",
     "timbreType": "Type de timbre",
     "pickTimbreType": "Choisir le type de timbre",
@@ -130,7 +135,10 @@
     "type": "Type",
     "status": "Statut",
     "used": "Utilisé",
+    "used_s": "Utilisés",
+    "used_s_stamp": "timbres utilisés",
     "available": "Disponible",
+    "available_s": "Disponibles",
     "usedYes": "Oui",
     "usedNo": "Non",
     "noType": "Aucun type de timbre trouvé",
@@ -146,7 +154,9 @@
     "provideInfo": "Fournissez les informations",
     "noTypeSelected": "Aucun type sélectionné",
     "paymentSuccess": "Paiement effectué",
-    "details": "Détails du timbre"
+    "details": "Détails du timbre",
+    "revenus":"Revenus",
+    "total":"Total timbres"
   },
 
   "transaction": {
@@ -203,7 +213,9 @@
     "title": "Notifications non lues",
     "markAsRead": "Marquer comme lu",
     "showAll": "Afficher toutes les notifications",
-    "pleaseWait": "Veuillez patienter.."
+    "pleaseWait": "Veuillez patienter..",
+     "notifications":"Notifications",
+     "unRead":"non lues"
   },
 
   "profil": {
@@ -243,5 +255,38 @@
     "yesInactive": "Oui, désactiver !",
     "yesActive": "Oui, activer !",
     "pay":"Payer"
-  }
+  },
+  "dashboard": {
+  "name": "Tableau de bord",
+  "desc": "Vue d'ensemble · données en temps réel",
+
+  "overview": "Vue globale",
+  "survey": "Aperçu",
+  "bySession": "Par session",
+  "bySessionStamp": "Timbres par session",
+  "evolution": "Évolution",
+
+  "globalUse": "Utilisation globale",
+  "repartitionTransaction": "Répartition des transactions",
+  "revenueBySession": "Revenus par session",
+  "stampByType": "Timbres par type",
+  "transactionsTrend": "Évolution des transactions",
+  "activeSession": "Session active",
+  "realTime": "Temps réel",
+
+  "used": "Utilisés",
+  "available": "Disponibles",
+  "accepted": "Acceptées",
+  "pending": "En attente",
+  "rejected": "Rejetées",
+
+  "percentageUsed": "utilisés",
+  "revenue": "Revenus",
+  "sessionRevenue": "Revenus par session (GNF)",
+
+  "noData": "Aucune donnée disponible",
+  "refreshing": "Actualisation...",
+  "system": "Système Timbre",
+  "version": "dashboard v2"
+}
 }

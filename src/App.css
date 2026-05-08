@@ -2,7 +2,7 @@
 @plugin "daisyui";
 
 @custom-variant dark (&:where(
-  [data-theme=Slate],
+  [data-theme="Slate"],
 ));
 
 @plugin "daisyui" {
