@@ -19,7 +19,7 @@ import FindTransaction from "./components/findTransaction";
 import Transaction from "./components/transaction";
 import MyTransactions from "./components/myTransactions";
 import { AuthProvider } from "./components/auth";
-import DashboardInfo from "./components/dashboard";
+import DashboardInfo from "./components/dashboard-controller";
 import DashboardFull from "./components/dashboardfull";
 
 function App() {

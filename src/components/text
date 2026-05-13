@@ -1,0 +1,91 @@
+ {/* <style>{`
+              @keyframes djomySlideIn {
+                from { transform: translateY(24px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+              }
+              @keyframes djomySpin {
+                to { transform: rotate(360deg); }
+              }
+              @keyframes djomyCheck {
+                from { stroke-dashoffset: 60; }
+                to { stroke-dashoffset: 0; }
+              }
+              .djomy-method-card {
+                border: 1.5px solid #E8ECF0;
+                border-radius: 12px;
+                padding: 12px 14px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                cursor: pointer;
+                transition: border-color 0.15s, background 0.15s;
+                background: #fff;
+              }
+              .djomy-method-card:hover {
+                background: #F6F8FB;
+              }
+              .djomy-method-card.selected {
+                border-color: var(--djomy-accent);
+                background: var(--djomy-accent-bg);
+              }
+              .djomy-input {
+                width: 100%;
+                border: 1.5px solid #E0E5EE;
+                border-radius: 10px;
+                padding: 11px 14px;
+                font-size: 15px;
+                outline: none;
+                transition: border-color 0.15s;
+                background: #FAFBFD;
+                box-sizing: border-box;
+                color: #1A2035;
+              }
+              .djomy-input:focus {
+                border-color: #0066CC;
+                background: #fff;
+              }
+              .djomy-otp-input {
+                width: 44px;
+                height: 52px;
+                border: 1.5px solid #E0E5EE;
+                border-radius: 10px;
+                text-align: center;
+                font-size: 20px;
+                font-weight: 600;
+                outline: none;
+                transition: border-color 0.15s;
+                background: #FAFBFD;
+                color: #1A2035;
+              }
+              .djomy-otp-input:focus {
+                border-color: #0066CC;
+                background: #fff;
+              }
+              .djomy-btn-primary {
+                width: 100%;
+                padding: 13px;
+                border: none;
+                border-radius: 11px;
+                font-size: 15px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: opacity 0.15s, transform 0.1s;
+                letter-spacing: 0.2px;
+              }
+              .djomy-btn-primary:hover { opacity: 0.92; }
+              .djomy-btn-primary:active { transform: scale(0.98); }
+              .djomy-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+              .djomy-btn-back {
+                background: none;
+                border: 1.5px solid #E0E5EE;
+                border-radius: 10px;
+                padding: 11px 20px;
+                font-size: 14px;
+                color: #667085;
+                cursor: pointer;
+                transition: background 0.15s;
+              }
+              .djomy-btn-back:hover { background: #F6F8FB; } */}
+            {/* `}</style> */}
+
+            {/* Header */}

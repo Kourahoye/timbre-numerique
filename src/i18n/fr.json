@@ -22,6 +22,7 @@
   },
 
   "nav": {
+    "Dashboard":"Tableau de bord",
     "appName": "Timbre Numérique",
     "authentication": "Authentification",
     "sessions": "Sessions",
@@ -120,7 +121,8 @@
     "allYears": "Toutes les années",
     "selectSession":"Selectionez la session à modifier",
     "session":"Session",
-    "allSessions":"Toutes les sessions"
+    "allSessions":"Toutes les sessions",
+    "inactive":"inactif"
   },
 
   "timbre": {
@@ -265,6 +267,7 @@
   "bySession": "Par session",
   "bySessionStamp": "Timbres par session",
   "evolution": "Évolution",
+    "timbreAvailable_s":"Timbres disponibles",
 
   "globalUse": "Utilisation globale",
   "repartitionTransaction": "Répartition des transactions",

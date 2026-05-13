@@ -6,6 +6,7 @@ import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid,
 } from "recharts";
+import ThemeSwitcher, { type ThemeName } from "./theme";
 
 // ─── GraphQL ──────────────────────────────────────────────────────────────────
 
@@ -28,9 +29,6 @@ const DASHBOARD_QUERY = gql`
 `;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
-type ThemeName = "Timbre" | "Slate" | "desk";
-
 interface ActiveSession { id: string; name: string }
 interface Stats {
   totalTimbres: number; usedTimbres: number; unusedTimbres: number;
@@ -66,12 +64,6 @@ const PALETTES: Record<ThemeName, Palette> = {
 const fmt     = (n: number) => n.toLocaleString("fr-FR");
 const fmtK    = (v: number) => v >= 1_000_000 ? `${(v/1_000_000).toFixed(1)}M` : v >= 1_000 ? `${(v/1_000).toFixed(0)}k` : `${v}`;
 const fmtDate = (d: string) => new Date(d).toLocaleDateString("fr-FR", { day:"2-digit", month:"short", year:"2-digit" });
-
-const THEMES: { label: string; value: ThemeName }[] = [
-  { label: "Timbre", value: "Timbre" },
-  { label: "Slate",  value: "Slate"  },
-  { label: "Desk",   value: "desk"   },
-];
 
 // ─── Recharts tooltip (uses DaisyUI classes) ──────────────────────────────────
 
@@ -143,7 +135,7 @@ function UsageDonut({ used, total, pal }: { used: number; total: number; pal: Pa
   const pct = total > 0 ? Math.round((used / total) * 100) : 0;
   const data = [{ name: trans("timbre.used_s"), value: used }, { name: trans("timbre.available_s"), value: unused }];
   return (
-    <ChartCard title={trans("dashboard.globalUsage")}>
+    <ChartCard title={trans("dashboard.globalUse")}>
       <div className="relative">
         <ResponsiveContainer width="100%" height={180}>
           <PieChart>
@@ -183,7 +175,7 @@ function TxPie({ pending, accepted, rejected, pal }: {
   ];
   const colors = [pal.ok, pal.warn, pal.err];
   return (
-    <ChartCard title={trans("dashboard.transactionDistribution")}>
+    <ChartCard title={trans("dashboard.repartitionTransaction")}>
       <ResponsiveContainer width="100%" height={180}>
         <PieChart>
           <Pie data={data} cx="50%" cy="50%" innerRadius={44} outerRadius={68}
@@ -232,7 +224,7 @@ function TimbreStackBar({ sessionInfos, timbres, pal }: { sessionInfos: Session[
   const data = sessionInfos.map(s => {
     const st = timbres.filter(t => t.price.session.id === s.id);
     const used = st.filter(t => t.used).length;
-    return { name: s.name, Utilisés: used, Disponibles: st.length - used };
+    return { name: s.name, [`${trans("timbre.used_s")}`]: used, [`${trans("timbre.available_s")}`]: st.length - used };
   });
   return (
     <ChartCard title={trans("dashboard.bySessionStamp")}>
@@ -255,10 +247,10 @@ function TypeBar({ timbres, timbreType, pal }: { timbres: TimbreItem[]; timbreTy
    const {t:trans} = useTranslation()
   const data = timbreType.map(tt => {
     const items = timbres.filter(t => t.price.type.name === tt.name);
-    return { name: tt.name, Total: items.length, Utilisés: items.filter(t => t.used).length };
+    return { name: tt.name, [`${trans("timbre.total")}`]: items.length, [`${trans("timbre.used_s")}`]: items.filter(t => t.used).length };
   });
   return (
-    <ChartCard title={trans("dashboard.byType")}>
+    <ChartCard title={trans("dashboard.stampByType")}>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={pal.dim + "33"} horizontal={false} />
@@ -364,27 +356,13 @@ function SessionTable({ sessionInfos, timbres }: { sessionInfos: Session[]; timb
 
 // ─── Theme switcher ───────────────────────────────────────────────────────────
 
-function ThemeSwitcher({ theme, setTheme }: { theme: ThemeName; setTheme: (t: ThemeName) => void }) {
-  return (
-    <div className="flex items-center gap-1 bg-base-300 rounded-btn p-0.5">
-      {THEMES.map(t => (
-        <button
-          key={t.value}
-          onClick={() => setTheme(t.value)}
-          className={`btn btn-xs rounded-btn ${theme === t.value ? "btn-primary" : "btn-ghost"}`}
-        >
-          {t.label}
-        </button>
-      ))}
-    </div>
-  );
-}
+
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function DashboardFull() {
   const {t:trans} = useTranslation()
-  const [theme, setTheme] = useState<ThemeName>("Timbre");
+  const [theme, setTheme] = useState<ThemeName>(`${localStorage.getItem("dash-theme")?.toString() as ThemeName ||"Timbre"}`);
 
   const { data, loading, error, refetch } = useQuery<QueryData>(DASHBOARD_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -395,11 +373,12 @@ export default function DashboardFull() {
 
   const handleTheme = (t: ThemeName) => {
     setTheme(t);
-    document.documentElement.setAttribute("data-theme", t);
+    localStorage.setItem("dash-theme",t)
+    document.querySelector("#dashbord")?.setAttribute("data-theme-2", t);
   };
 
   return (
-    <div data-theme={theme} className="min-h-screen bg-base-100 text-base-content transition-colors duration-300">
+    <div id="dashboard" data-theme={theme} className="min-h-screen bg-base-100 text-base-content transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
 
         {/* Header */}
@@ -439,7 +418,7 @@ export default function DashboardFull() {
               <>
                 <KpiCard label={trans("timbre.total")}   value={fmt(s.totalTimbres)} />
                 <KpiCard label={trans("timbre.used_s")}  value={fmt(s.usedTimbres)}    color="text-primary" />
-                <KpiCard label={trans("timbre.avalaible_s")}      value={fmt(s.unusedTimbres)}  color="text-secondary" />
+                <KpiCard label={trans("timbre.available_s")}      value={fmt(s.unusedTimbres)}  color="text-secondary" />
                 <KpiCard label={trans("timbre.revenus")}          value={`${fmtK(s.totalRevenue)} GNF`} sub={trans("timbre.used_s")} color="text-accent" />
                 <KpiCard label={trans("auth.users")}    value={fmt(s.totalUsers)} />
                 <KpiCard label={trans("notifications.notifications")}   value={s.unreadNotifications} sub={trans("notifications.unRead")}

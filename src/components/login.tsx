@@ -45,7 +45,10 @@ export default function Login() {
         toast.success(`${t("auth.connectSuccess")}`);
         window.location.href = "/";
       },
-      onError: () => setErrorMsg(`${t("auth.serverError")}`),
+      onError: () => {
+        setErrorMsg(`${t("auth.serverError")}`)
+        // toast.error(error.message)
+      },
     },
   );
 

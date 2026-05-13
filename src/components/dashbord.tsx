@@ -51,6 +51,9 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
         {
           me && <li><Link className="btn btn-circle btn-soft btn-wide btn-outline btn-info uppercase" to="/profil">{me.username}</Link></li>
         }
+        <Can permission="view_dashboard_global">
+          <li><Link to="/dashboard-full" >{t('nav.Dashboard')}</Link></li>
+        </Can>
         <li>
           <a>{t('nav.authentication')}</a>
           <ul className="p-2">
@@ -83,11 +86,16 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       <Can permission="">
           <li><Link to="/mytransactions" >{t("nav.myTransactions")}</Link></li>
       </Can>
-      
+      <li>
+          <label className="toggle text-base-content">
+  <input type="checkbox" value="Slate" className="theme-controller" />
+  <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
+  <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>
+</label>
+      </li>
       </ul>
     </div>
     <Link className="btn btn-ghost text-xl font-mono" to="/">{t('nav.appName')}</Link>
-
   </div>
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal px-1">
@@ -127,11 +135,16 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       me &&
           <li><Link to="/mytransactions" >{t("nav.myTransactions")}</Link></li>
      }
+     <Can permission="view_dashboard_global">
+      <li>
+        <Link to="/dashboard-full" >Dashboard</Link>
+      </li>
+     </Can>
       
     </ul>
   </div>
   <div className="navbar-end">
-   <label className="toggle text-base-content">
+   <label className="toggle text-base-content not-lg:hidden">
   <input type="checkbox" value="Slate" className="theme-controller" />
   <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
   <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>

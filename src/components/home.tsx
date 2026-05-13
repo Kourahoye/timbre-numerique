@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { SessionType } from "./types";
+import DjomyPaymentModal from "./payment";
 
 
 const GET_TYPE = gql`
@@ -26,8 +27,8 @@ query GET_TIMBRE_PRICE($id:Int!) {
 }
 `;
 const BUY =gql`
-mutation BUY {
-  generateTimbre(typeId: 1) {
+mutation BUY($id:Int!) {
+  generateTimbre(typeId: $id) {
     id
   }
 }
@@ -164,7 +165,12 @@ function Home() {
                 )}
               </div>
               {data ? (
-                <button className="btn btn-primary">{t("timbre.buy")}</button>
+                 <DjomyPaymentModal 
+                      amount = {data?.getTimbrePrice.price || 0}
+                      currency = {"gnf"}
+                      description= {"description"}
+                      reference = {"ref"}
+                    />
               ) : (
                 <button className="btn btn-primary" disabled>
                   {t("timbre.buy")} 

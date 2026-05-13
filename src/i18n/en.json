@@ -22,6 +22,7 @@
 
   "nav": {
     "appName": "Digital Stamp",
+    "Dashboard":"Dashboard",
     "authentication": "Authentication",
     "sessions": "Sessions",
     "timbreType": "Stamp Type",
@@ -119,7 +120,8 @@
     "allYears": "All years",
     "session":"Session",
     "selectSession":"Select the session to modify",
-    "allSessions":"All Sessions"
+    "allSessions":"All Sessions",
+     "inactive":"inactive"
   },
 
   "timbre": {
@@ -252,7 +254,7 @@
     "yesActive": "Yes, activate it!",
     "pay":"Pay"
   },
-   "dashboard": {
+  "dashboard": {
   "name": "Dashboard",
   "desc": "Overview · real-time data",
 
@@ -261,7 +263,7 @@
   "bySession": "By session",
   "bySessionStamp": "Stamps by session",
   "evolution": "Evolution",
-
+  "timbreAvailable_s":"Stamp available",
   "globalUse": "Global usage",
   "repartitionTransaction": "Transaction distribution",
   "revenueBySession": "Revenue by session",

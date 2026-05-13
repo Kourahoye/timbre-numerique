@@ -6,6 +6,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    allowedHosts: ["swimmer-bullwhip-rearview.ngrok-free.dev"]
+    allowedHosts: ["swimmer-bullwhip-rearview.ngrok-free.dev","127.0.0.1:8000"]
   },
 })
