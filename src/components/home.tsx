@@ -1,9 +1,9 @@
 import { gql } from "@apollo/client";
 import QrCode from "./qrcode";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
+import { useLazyQuery, useQuery } from "@apollo/client/react";
 import { RiErrorWarningLine } from "react-icons/ri";
 import toast from "react-hot-toast";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { SessionType } from "./types";
@@ -26,13 +26,13 @@ query GET_TIMBRE_PRICE($id:Int!) {
   }
 }
 `;
-const BUY =gql`
-mutation BUY($id:Int!) {
-  generateTimbre(typeId: $id) {
-    id
-  }
-}
-`;
+// const BUY =gql`
+// mutation BUY($id:Int!) {
+//   generateTimbre(typeId: $id) {
+//     id
+//   }
+// }
+// `;
 export type TimbreType ={
   timbreType :{
     id:number
@@ -53,7 +53,7 @@ function Home() {
     refetch: refetchType,
   } = useQuery<TimbreType>(GET_TYPE);
   const [getPrice, { loading: loadingPrice, data }] = useLazyQuery<timbreTYpes>(GET_TIMBRE_PRICE);
-  const [buy]= useMutation(BUY)
+  // const [buy]= useMutation(BUY)
   const [_type,setType]=useState("");
   const {t} = useTranslation();
 
@@ -71,41 +71,42 @@ function Home() {
               className="space-y-2"
               onSubmit={(e) => {
                 e.preventDefault();
-                Swal.fire({
-                  title: `${t("timbre.submitCard")}`,
-                  input: "text",    
-                  inputAttributes: { autocapitalize: "on" },
-                  showCancelButton: true,
-                  confirmButtonText: `${t('timbre.buy')}`,
-                  showLoaderOnConfirm: true,
-                  footer:'<strong>This is fake</strong>',
-                  preConfirm: async (login) => {
-                    if (login) {
-                      return;
-                    } else {
-                      Swal.showValidationMessage(`${t('timbre.provideInfo')}`);
-                    }
-                  },
-                  allowOutsideClick: () => !Swal.isLoading(),
-                }).then((result) => {
-                  if (result.isConfirmed){
-                    // const _type = document.querySelector("#type")
-                    const toastId = toast.loading(`${t("common.pleaseWait")}`)
-                    if (_type ==null || _type =="" ){
-                      toast.error("Aucun type selectionner")
-                        toast.error(`${t("timbre.noType")}`)
-                      return
-                    }
-                      buy({variables:{id:Number.parseInt(_type.toString())}}).then((res)=>{
-                          if(res.data){
-                          toast.success(`${t("timbre.paymentSuccess")}`,{id:toastId})
-                        }
-                      }).catch((error)=>{
-                        toast.success(error.message,{id:toastId})
-                      }) 
-                    }
-                });
-              }}
+              //   Swal.fire({
+              //     title: `${t("timbre.submitCard")}`,
+              //     input: "text",    
+              //     inputAttributes: { autocapitalize: "on" },
+              //     showCancelButton: true,
+              //     confirmButtonText: `${t('timbre.buy')}`,
+              //     showLoaderOnConfirm: true,
+              //     footer:'<strong>This is fake</strong>',
+              //     preConfirm: async (login) => {
+              //       if (login) {
+              //         return;
+              //       } else {
+              //         Swal.showValidationMessage(`${t('timbre.provideInfo')}`);
+              //       }
+              //     },
+              //     allowOutsideClick: () => !Swal.isLoading(),
+              //   }).then((result) => {
+              //     if (result.isConfirmed){
+              //       // const _type = document.querySelector("#type")
+              //       const toastId = toast.loading(`${t("common.pleaseWait")}`)
+              //       if (_type ==null || _type =="" ){
+              //         toast.error("Aucun type selectionner")
+              //           toast.error(`${t("timbre.noType")}`)
+              //         return
+              //       }
+              //         buy({variables:{id:Number.parseInt(_type.toString())}}).then((res)=>{
+              //             if(res.data){
+              //             toast.success(`${t("timbre.paymentSuccess")}`,{id:toastId})
+              //           }
+              //         }).catch((error)=>{
+              //           toast.success(error.message,{id:toastId})
+              //         }) 
+              //       }
+              //   });
+              }
+            }
             >
               <div className="flex flex-col items-start justify-start gap-2 w-full">
                 <label className="label" htmlFor="type">
@@ -164,13 +165,16 @@ function Home() {
                   <span className="loading loading-spinner loading-md"></span>
                 )}
               </div>
-              {data ? (
-                 <DjomyPaymentModal 
-                      amount = {data?.getTimbrePrice.price || 0}
-                      currency = {"gnf"}
-                      description= {"description"}
-                      reference = {"ref"}
-                    />
+              {types && data ? (
+               <DjomyPaymentModal 
+                  amount={data?.getTimbrePrice.price || 0}
+                  description=""
+                  typeTimbre={
+                    types?.timbreType.find(
+                      item => item.id === Number.parseInt(_type)
+                    )?.name
+                  }
+                />
               ) : (
                 <button className="btn btn-primary" disabled>
                   {t("timbre.buy")} 
