@@ -217,7 +217,7 @@ export default function Session() {
               >
                 <div className="form-control w-full">
                   <label className="label">
-                    <span className="label-text"> <th>{t("session.name")}</th></span>
+                    <span className="label-text">{t("session.name")}</span>
                   </label>
                   <input
                     type="text"

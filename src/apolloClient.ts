@@ -10,43 +10,42 @@ const refreshClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-// --- Auth Link ---
 const authLink = new ApolloLink((operation, forward) => {
   const tokens = getTokens();
-  if (tokens?.accessToken) {
-    operation.setContext({
-      headers: {
-        Authorization: `JWT ${tokens.accessToken}`,
-        'Accept-Language': i18n.language,
-      },
-    });
-  }
+  const lang = i18n.language?.slice(0, 2) ?? 'fr';
+
+  operation.setContext(({ headers = {} }: { headers: Record<string, string> }) => ({
+    headers: {
+      ...headers,
+      ...(tokens?.accessToken && { Authorization: `JWT ${tokens.accessToken}` }),
+      'Accept-Language': lang,   // ✅ "fr" ou "en", jamais "fr-FR"
+    },
+  }));
+
   return forward(operation);
 });
 
 const errorLink = new ErrorLink(({ error, operation,forward }) => {
   if (CombinedGraphQLErrors.is(error)) {
     error.errors.forEach(({ message }) =>{
-      // console.log(`===================================================================\n ${message}`)
       if (message.includes("Unauthenticated")) {
+        apolloClient.clearStore();
         localStorage.removeItem("me")
         const _tokens = getTokens();
         return refreshClient.mutate({
           mutation: REFRESH_TOKEN_MUTATION,
           variables: { refreshToken: _tokens.refreshToken },
         }).then(({ data }) => {
-          // console.log(`[GraphQL debug from conf =================]: Message: ${data}`)
-          // const typedData = data as { refreshToken: { token: { token: string } } };
           const accessToken = data.refreshToken.token.token;
           const refreshToken = data.refreshToken.refreshToken.token;
           storeTokens(accessToken, refreshToken);
-
+          const lang = i18n.language?.slice(0, 2) ?? 'fr';
           // Mettre à jour le header de l'opération initiale
           operation.setContext(({ headers = {} }) => ({
             headers: {
               ...headers,
               Authorization: `JWT ${accessToken}`,
-              'Accept-Language': i18n.language,
+              'Accept-Language':lang,
             }
           }));
           console.log(

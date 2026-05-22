@@ -17,7 +17,8 @@
     "typeHere": "Type here",
     "change": "Change",
     "fieldRequired":"This field is required",
-    "refresh":"↺ Refresh"
+    "refresh":"↺ Refresh",
+    "loginRequired":"Login required"
   },
 
   "nav": {
@@ -241,7 +242,7 @@
     "reference": "Reference",
     "type": "Type",
     "status": "Status",
-    "consume": "Consume",
+    "consumme": "Consume",
     "selectTimbre": "Please select a stamp"
   },
 

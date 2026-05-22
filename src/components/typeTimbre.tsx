@@ -99,7 +99,7 @@ export default function TypeTimbre() {
               <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
             <h3 className="font-bold text-lg">{t("timbre.modifyType")}</h3>
-            <p className="py-4">
+            <div className="py-4">
               <form method="post" 
               className="flex justify-between items-center space-x-2"
               onSubmit={(e)=>{
@@ -144,7 +144,7 @@ export default function TypeTimbre() {
                 </button>
               </form>
 
-            </p>
+            </div>
           </div>
         </dialog>
         <dialog id="add_modal" className="modal">

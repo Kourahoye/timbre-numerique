@@ -8,11 +8,13 @@ import { useMutation } from "@apollo/client/react";
 const INITIATE_PAYMENT = gql`
 mutation InitiatePayment(
   $phone:String!,
-  $amount:Int!
+  $amount:Int!,
+  $type:Int!
 ) {
   initiatePayment(
     phone:$phone,
-    amount:$amount
+    amount:$amount,
+    type:$type
   ) {
     paymentUrl
     reference
@@ -787,6 +789,7 @@ type PaymentMethod = "orange_money" | "mtn" | "visa" | "paycard";
 
 interface DjomyPaymentModalProps {
   amount: number;
+  type: number;
   currency?: string;
   description?: string;
   typeTimbre?: string;
@@ -859,6 +862,7 @@ type Step = "method" | "details" | "otp" | "success" | "error";
 
 export default function DjomyPaymentModal({
   amount,
+  type,
   currency = "GNF",
   description,
   typeTimbre,
@@ -866,7 +870,7 @@ export default function DjomyPaymentModal({
   onClose,
   onError
 }: DjomyPaymentModalProps) {
-  const [initiatePayment] = useMutation(INITIATE_PAYMENT);
+  const [initiatePayment,{loading:chargement}] = useMutation(INITIATE_PAYMENT);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("method");
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
@@ -989,7 +993,8 @@ export default function DjomyPaymentModal({
     initiatePayment({
       variables: {
         phone: phoneOrCard,
-        amount,
+        amount:amount,
+        type:type
       },
     }).then((res)=>{
       const txId = "DJ-" + Math.random().toString(36).substring(2, 12).toUpperCase();
@@ -1548,9 +1553,9 @@ export default function DjomyPaymentModal({
                         flex: 1,
                       }}
                       onClick={handleConfirm}
-                      disabled={loading}
+                      disabled={chargement}
                     >
-                      {loading ? (
+                      {chargement ? (
                         <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                           <span
                             style={{
@@ -1604,11 +1609,11 @@ export default function DjomyPaymentModal({
                   </div>
 
                   <div style={{ fontSize: 18, fontWeight: 700, color: "#1A2035", marginBottom: 6 }}>
-                    Paiement réussi !
+                    Paiement initier !
                   </div>
                   <div style={{ fontSize: 13, color: "#667085", marginBottom: 20, lineHeight: 1.5 }}>
-                    Votre paiement de <strong>{formatAmount(amount)}</strong> a été traité avec succès.<br/>
-                    <a href={lien} className="btn btn-sm btn-info btn-outline btn-ghost">Payer</a>
+                    Votre paiement de <strong>{formatAmount(amount)}</strong> a été initier avec succès.<br/>
+                   <span>En attente de confirmation: <a href={lien} className="btn btn-sm btn-info btn-outline btn-ghost">Confirmer</a></span>
                   </div>
 
                   <div

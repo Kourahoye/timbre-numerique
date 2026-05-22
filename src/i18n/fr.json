@@ -18,7 +18,8 @@
     "change": "Changer",
     "fieldRequired":"Ce champ est requis",
     "refresh":"↺ Actualiser",
-    "total":"Total timbres"
+    "total":"Total timbres",
+    "loginRequired":"Authentification requise"
   },
 
   "nav": {
@@ -245,7 +246,7 @@
     "reference": "Référence",
     "type": "Type",
     "status": "Statut",
-    "consume": "Consommer",
+    "consumme": "Consommer",
     "selectTimbre": "Veuillez sélectionner un timbre"
   },
 

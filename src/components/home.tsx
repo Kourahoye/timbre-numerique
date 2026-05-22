@@ -54,7 +54,7 @@ function Home() {
   } = useQuery<TimbreType>(GET_TYPE);
   const [getPrice, { loading: loadingPrice, data }] = useLazyQuery<timbreTYpes>(GET_TIMBRE_PRICE);
   // const [buy]= useMutation(BUY)
-  const [_type,setType]=useState("");
+  const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);
   const {t} = useTranslation();
 
   return (
@@ -118,20 +118,20 @@ function Home() {
                   className="select w-full"
                   defaultValue={"default"}
                   id="type"
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const selectedId = Number.parseInt(e.target.value, 10);
+                    setSelectedTypeId(selectedId);
                     getPrice({
-                      variables: { id: Number.parseInt(e.target.value) },
-                    }).then((res) => {
-                        if(res.data){                  
-                          setType(e.target.value)
-                        }
+                      variables: { id: selectedId },
+                    }).catch((error) => {
+                      // console.log(error);
+                      if (error.message.includes("Authentication required")){
+                        toast.error(`${t("common.loginRequired")}`);
                         return
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                        toast.error(`${t("session.typeNotAvailable")}`);
-                      })
-                  }
+                      }
+                      toast.error(error.message);
+                    });
+                  }}
                 >
                   <option disabled value={"default"}>
                     {t("timbre.pickTimbreType")}
@@ -155,7 +155,7 @@ function Home() {
               </div>
 
               <div className="input w-full p-2">
-                <span className="border-r-2 border-r-black px-4 text-black text-lg">
+                <span className="border-r-2 border-r-black px-4 dark:border-r-white text-lg">
                   {t("timbre.type")}
                 </span>
                 <span className="textarea-md">
@@ -171,9 +171,10 @@ function Home() {
                   description=""
                   typeTimbre={
                     types?.timbreType.find(
-                      item => item.id === Number.parseInt(_type)
+                      item => item.id === Number.parseInt(selectedTypeId?.toString() || "0")
                     )?.name
                   }
+                  type={Number.parseInt(selectedTypeId?.toString() || "0")}
                 />
               ) : (
                 <button className="btn btn-primary" disabled>

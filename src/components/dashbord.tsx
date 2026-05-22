@@ -19,18 +19,15 @@ mutation RevokeToken($refreshToken: String!) {
 }
 `
 export default function Dashboard({ children }: { children: React.ReactNode }) {
-      const {t} = useTranslation();
+    const {t} = useTranslation();
      const { unreadCount, loading } = useNotifications();
-    //  const [me,setMe]  =  useState(localStorage.getItem("me"))
      const [logout] = useMutation(LOGOUT)
      const navigate = useNavigate()
-    //  const mode =  localStorage.getItem("mode")
      const {me} = useAuth()
     const logoutfunc = ()=>{
         logout({variables:{refreshToken:localStorage.getItem("refresh")}}).then(()=>{
           localStorage.removeItem("access")
           localStorage.removeItem("refresh")
-          // setMe("")
           localStorage.removeItem("me")
           apolloClient.clearStore()
           navigate("/login")
@@ -48,17 +45,23 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       <ul
         tabIndex={-1}
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <Can permission="">
         {
           me && <li><Link className="btn btn-circle btn-soft btn-wide btn-outline btn-info uppercase" to="/profil">{me.username}</Link></li>
         }
+        </Can>
         <Can permission="view_dashboard_global">
           <li><Link to="/dashboard-full" >{t('nav.Dashboard')}</Link></li>
         </Can>
         <li>
           <a>{t('nav.authentication')}</a>
           <ul className="p-2">
-            {
-               me !=null ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t("auth.logout")}</button>  :(
+            
+               {
+                me &&
+                 <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t("auth.logout")}</button>  
+               }               
+                {!me &&(
                 <>
                 <li><Link to="/register">{t('auth.register')}</Link></li>
                 <li><Link to="/login">{t('auth.login')}</Link></li>
@@ -104,10 +107,13 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
         <details>
           <summary>{t('nav.authentication')}</summary>
           <ul className="p-2 bg-base-100 w-40 z-1">
-             {
-               me?.username != "" ? <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t('auth.logout')}</button>  :(
+                {
+                me &&
+                 <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t("auth.logout")}</button>  
+               }               
+                {!me &&(
                 <>
-                <li><Link to="/register">{("auth.register")}</Link></li>
+                <li><Link to="/register">{t('auth.register')}</Link></li>
                 <li><Link to="/login">{t('auth.login')}</Link></li>
                 </>
               )
