@@ -4,6 +4,7 @@ import { useAuth } from "../auth";
 import { useEffect, useMemo } from "react";
 import { useQuery } from "@apollo/client/react";
 
+
 type Notification = {
   id: string;
   message: string;
@@ -97,6 +98,5 @@ export const useNotifications = () => {
     () => notifications.filter((n) => !n.read).length,
     [notifications]
   );
-
   return { notifications, unreadCount, loading };
 };

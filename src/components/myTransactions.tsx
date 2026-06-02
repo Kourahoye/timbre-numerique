@@ -124,13 +124,13 @@ export default function MyTransactions() {
                       <strong>{transaction.timbre.type?.name ?? "—"}</strong>
                     </span>
                     <span>
-                      {t("timbre.owner")} :
+                      {t("transaction.owner")} :
                       <strong>
                         {transaction.timbre.ownedBy?.username ?? "—"}
                       </strong>
                     </span>
                     <span>
-                      {t("timbe.amount")} :
+                      {t("transaction.amount")} :
                       <strong>
                         {transaction.timbre.price
                           ? `${transaction.timbre.price.price}`

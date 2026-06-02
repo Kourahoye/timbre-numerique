@@ -24,7 +24,9 @@ const SET_ROLE = gql`
 `
 export default function Roles() {
   const {t} = useTranslation();
-  const { loading: loadingUsers, data: users, error, refetch } = useQuery<UsersData>(USERS_QUERY);
+  const { loading: loadingUsers, data: users, error, refetch } = useQuery<UsersData>(USERS_QUERY, {
+      fetchPolicy: "cache-and-network",
+    });
   const [assign_role] = useMutation(SET_ROLE);
   return <>
     <div className="min-h-screen flex justify-center items-center bg-base-200">

@@ -74,7 +74,7 @@ mutation MyMutation($action:String!,$id:Int!) {
 export default function FindTransaction(){
     const { idTranction } = useParams();
     const {t} = useTranslation();
-    const [loadTransaction, { loading, data,error }] = useLazyQuery<TranscType>(FIND_TRANSACTION)
+    const [loadTransaction, { loading, data,error,refetch }] = useLazyQuery<TranscType>(FIND_TRANSACTION)
     const [giveResponse] = useMutation<{endTransactions:{message:string,success:boolean}}>(GIVE_RESPONSE)
     const me  =  localStorage.getItem("me")
 
@@ -108,7 +108,7 @@ export default function FindTransaction(){
                 } else {
                     toast.error(data.endTransactions.message, { id: toastId });
                 }
-                // refetch();
+                refetch();
             }else{
                 if(res.error){
                     toast.error(res.error?.message)

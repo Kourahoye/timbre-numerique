@@ -94,7 +94,7 @@ export default function Session() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: `Yes, ${active ? t("common.yesInactive") : t("common.yesActive")}`,
+      confirmButtonText: `${active ? t("confirm.yesInactive") : t("confirm.yesActive")}`,
     }).then(async (result) => {
       if (!result.isConfirmed) {
         // e.preventDefault()
@@ -107,11 +107,11 @@ export default function Session() {
             res.data as ToggleSessionMutationResponse;
           if (data.toogleActiveSession.success) {
             toast.success(data.toogleActiveSession.message, { id: toastId });
+            refetch();
           } else {
             toast.error(data.toogleActiveSession.message, { id: toastId });
           }
           // toast.success(data.message, { id:toastId })
-          refetch();
         })
         .catch(() => {
           toast.error(`${t("common.unexpectedError")}`, { id: toastId });
@@ -217,7 +217,7 @@ export default function Session() {
               >
                 <div className="form-control w-full">
                   <label className="label">
-                    <span className="label-text"> <th>{t("session.name")}</th></span>
+                    <span className="label-text">{t("session.name")}</span>
                   </label>
                   <input
                     type="text"
@@ -448,7 +448,7 @@ export default function Session() {
                         <input
                           type="checkbox"
                           name="toggler"
-                          onClick={(e) => {
+                          onChange={(e) => {
                             e.preventDefault();
                             toogle(Number.parseInt(session.id), session.active);
                           }}

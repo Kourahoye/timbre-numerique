@@ -4,49 +4,50 @@ import { REFRESH_TOKEN_MUTATION } from './graphql/mutations';
 import { getTokens, storeTokens } from './services/manageTokens';
 import i18n from './i18n';
 
+
 // --- Client pour refresh uniquement ---
 const refreshClient = new ApolloClient({
   link: new HttpLink({ uri: "http://localhost:8000/graphql/" }),
   cache: new InMemoryCache(),
 });
 
-// --- Auth Link ---
 const authLink = new ApolloLink((operation, forward) => {
   const tokens = getTokens();
-  if (tokens?.accessToken) {
-    operation.setContext({
-      headers: {
-        Authorization: `JWT ${tokens.accessToken}`,
-        'Accept-Language': i18n.language,
-      },
-    });
-  }
+  const lang = i18n.language?.slice(0, 2) ?? 'fr';
+
+  operation.setContext(({ headers = {} }: { headers: Record<string, string> }) => ({
+    headers: {
+      ...headers,
+      ...(tokens?.accessToken && { Authorization: `JWT ${tokens.accessToken}` }),
+      'Accept-Language': lang,
+    },
+  }));
+
   return forward(operation);
 });
 
 const errorLink = new ErrorLink(({ error, operation,forward }) => {
   if (CombinedGraphQLErrors.is(error)) {
     error.errors.forEach(({ message }) =>{
-      // console.log(`===================================================================\n ${message}`)
-      if (message.includes("Unauthenticated")) {
-        localStorage.removeItem("me")
+      console.info("GraphQL errors detected, checking for authentication issues...");
+      if (message.includes("Unauthenticated")||message.includes("Authentication required")) {
         const _tokens = getTokens();
+        apolloClient.clearStore();
         return refreshClient.mutate({
           mutation: REFRESH_TOKEN_MUTATION,
           variables: { refreshToken: _tokens.refreshToken },
         }).then(({ data }) => {
-          // console.log(`[GraphQL debug from conf =================]: Message: ${data}`)
-          // const typedData = data as { refreshToken: { token: { token: string } } };
+          localStorage.removeItem("me")
           const accessToken = data.refreshToken.token.token;
           const refreshToken = data.refreshToken.refreshToken.token;
           storeTokens(accessToken, refreshToken);
-
+          const lang = i18n.language?.slice(0, 2) ?? 'fr';
           // Mettre à jour le header de l'opération initiale
           operation.setContext(({ headers = {} }) => ({
             headers: {
               ...headers,
               Authorization: `JWT ${accessToken}`,
-              'Accept-Language': i18n.language,
+              'Accept-Language':lang,
             }
           }));
           console.log(
@@ -65,6 +66,8 @@ const errorLink = new ErrorLink(({ error, operation,forward }) => {
     );
   } else {
     console.error(`[Network error]: ${error}`);
+    
+    // window.location.replace("/login");
   }
 });
   return forward(operation);
