@@ -8,6 +8,7 @@ import { useNotifications } from "./hooks/useNotification";
 import { useAuth } from "./auth";
 import LanguageSwitcher from "./languageSeletor";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 
 const LOGOUT = gql`
@@ -33,6 +34,12 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           navigate("/login")
         })
     }
+    const [isdark, setIsdark] = useState(
+    JSON.parse(localStorage.getItem('isdark') || 'false')
+    );
+    useEffect(() => {
+      localStorage.setItem('isdark', JSON.stringify(isdark));
+    }, [isdark]);
     
 
     return <>
@@ -91,7 +98,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       </Can>
       <li>
           <label className="toggle text-base-content">
-  <input type="checkbox" value="Slate" className="theme-controller" />
+  <input type="checkbox" value="Slate" className="theme-controller" checked={isdark} onChange={(e) => setIsdark(e.target.checked)} />
   <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
   <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>
 </label>
@@ -151,7 +158,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
   </div>
   <div className="navbar-end">
    <label className="toggle text-base-content not-lg:hidden">
-  <input type="checkbox" value="Slate" className="theme-controller" />
+  <input type="checkbox" value="Slate" className="theme-controller" checked={isdark} onChange={(e) => setIsdark(e.target.checked)} />
   <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
   <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>
 </label>
@@ -182,18 +189,28 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       <ul
         tabIndex={-1}
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow space-y-2">
-        <li>
-           {
-            me ? <Link className="btn btn-circle btn-sm btn-soft btn-wide btn-outline btn-info uppercase text-md" to="/profil">{me.username}</Link>
-            : <Link to="/login" >{t('auth.login')}</Link>
-          }
+        {/* <li>
         </li>
         <li>
-          <LanguageSwitcher />
-        </li>
+        {me?.username != "" && <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t("auth.logout")}</button>}
+        </li> */}
+        {
+         me && <li><Link className="btn btn-circle btn-sm btn-soft btn-wide btn-outline btn-info uppercase text-md" to="/profil">{me.username}</Link></li>
+       }
         <li>
-          {me?.username != "" && <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t("auth.logout")}</button>}
+        <LanguageSwitcher />
         </li>
+            {
+                me &&
+                 <li><button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t("auth.logout")}</button></li>  
+               }               
+                {!me &&(
+                <>
+                <li><Link to="/register">{t('auth.register')}</Link></li>
+                <li><Link to="/login">{t('auth.login')}</Link></li>
+                </>
+              )
+            }
       </ul>
     </div>
   </div>

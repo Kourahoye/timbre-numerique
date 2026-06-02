@@ -51,7 +51,10 @@ function Home() {
     error: errortype,
     data: types,
     refetch: refetchType,
-  } = useQuery<TimbreType>(GET_TYPE);
+  } = useQuery<TimbreType>(GET_TYPE, {
+      fetchPolicy: "cache-and-network",  // ✅ cache + diff
+                        // ✅ skip si non connecté
+    });
   const [getPrice, { loading: loadingPrice, data }] = useLazyQuery<timbreTYpes>(GET_TIMBRE_PRICE);
   // const [buy]= useMutation(BUY)
   const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);

@@ -18,7 +18,10 @@ mutation CONSUME_TIMBRE($id:Int!){
 export default function Transaction(){
         const { qr } = useParams();
          const {t} = useTranslation();
-        const [ scan, { loading, error, data }] = useLazyQuery<ScanData,ScanAgrs>(SCAN);
+        const [ scan, { loading, error, data }] = useLazyQuery<ScanData,ScanAgrs>(SCAN, {
+      fetchPolicy: "cache-and-network",  // ✅ cache + diff
+                        // ✅ skip si non connecté
+    });
         const [consumeTimbre] = useMutation(CONSUME_TIMBRE);
 
     useEffect(()=>{

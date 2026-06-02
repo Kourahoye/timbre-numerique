@@ -57,7 +57,10 @@
     "serverError": "Server error, please try again.",
     "accountCreated": "Account created successfully!",
     "sessionExpired": "Your session has expired, please log in again",
-    "users":"Users" 
+    "users":"Users",
+    "oldPassword":"Old password", 
+    "newPassword1":"New password", 
+    "newPassword2":"Confirm new password"
   },
 
   "errors": {
@@ -231,7 +234,10 @@
     "qrCode": "QR Code",
     "textCode": "Text Code",
     "code": "Code",
-    "close": "Close"
+    "close": "Close",
+     "firstNameRequired":"First name required",
+    "LastNameRequired":"Last name required",
+    "ChangePassword":"Change password"
   },
 
   "scan": {

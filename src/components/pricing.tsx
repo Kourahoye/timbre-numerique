@@ -98,19 +98,25 @@ export default function Price() {
     error: errorSession,
     data: sessions,
     refetch: refetchSession,
-  } = useQuery<{sessions:SessionType[]}>(GET_SESSION);
+  } = useQuery<{sessions:SessionType[]}>(GET_SESSION, {
+      fetchPolicy: "cache-and-network",
+    });
   const {
     loading: loadingType,
     error: errortype,
     data: types,
     refetch: refetchType,
-  } = useQuery(GET_TYPE);
+  } = useQuery(GET_TYPE, {
+      fetchPolicy: "cache-and-network",
+    });
   const {
     loading: loadingPrices,
     error: errorPrices,
     data: prices,
     refetch: refetchPrices,
-  } = useQuery<PriceAssignation>(GET_CURRENT_PRICES);
+  } = useQuery<PriceAssignation>(GET_CURRENT_PRICES, {
+      fetchPolicy: "cache-and-network",
+    });
   const [setTimbrePrice,{loading}] = useMutation(SET_TIMBRE_PRICE)
   const [loadAllPrices, { called, loading:loadingAll, data:allPrices,error:errorAllPrices,refetch:refetchAllPrices }] = useLazyQuery<{prices:PriceType[]}>(All_PRICES)
 
@@ -258,7 +264,7 @@ export default function Price() {
                         {type.name}
                       </option>
                     ))}
-                  {types && console.log(types)}
+                  {/* {types && console.log(types)} */}
                 </select>
                 {loadingType && (
                   <span className="loading loading-xs loading-spinner"></span>

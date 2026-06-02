@@ -61,7 +61,9 @@ export type AllNotifs = {
 };
 export default function Notifications() {
   const {t} = useTranslation();
-  const { loading, error, data, refetch } = useQuery<Notifs>(NEW_NOTIFICATIONS);
+  const { loading, error, data, refetch } = useQuery<Notifs>(NEW_NOTIFICATIONS, {
+      fetchPolicy: "cache-and-network"
+    });
   const [ loadAll,{ loading:loadingAll, error:errorAll, data:dataAll, refetch:refecthAll,called }] = useLazyQuery<AllNotifs>(NOTIFICATIONS);
    const [markasread] = useMutation<{markAsRead:{message:string,success:boolean}}>(MARK_ONE_AS_READ);
 

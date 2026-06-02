@@ -88,7 +88,7 @@ export default function TypeTimbre() {
 
   useEffect(() => {
     loadTypeTimbre();
-  });
+  },[]);
 
   return (
     <>

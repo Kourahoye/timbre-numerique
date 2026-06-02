@@ -58,7 +58,10 @@
     "serverError": "Erreur serveur, réessayez.",
     "accountCreated": "Compte créé avec succès !",
     "sessionExpired": "Votre session a expirée, veuillez vous reconnecter",
-     "users":"Utilisateurs" 
+    "users":"Utilisateurs",
+    "oldPassword":"Ancien mot de passe", 
+    "newPassword1":"Nouveau mot de passe", 
+    "newPassword2":"Confirmer nouveau mot de passe"
   },
 
   "errors": {
@@ -234,7 +237,10 @@
     "qrCode": "QR Code",
     "textCode": "Code texte",
     "code": "Code",
-    "close": "Fermer"
+    "close": "Fermer",
+    "firstNameRequired":"Prénom requis",
+    "LastNameRequired":"Nom requis",
+    "ChangePassword":"Changer le mot de passe"
   },
 
   "scan": {

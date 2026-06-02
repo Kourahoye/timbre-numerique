@@ -10,7 +10,7 @@ type Props = {
 const ProtectedRoute = ({ children, permission }: Props) => {
   const { me, loading, hasPermission } = useAuth();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div className="h-max flex items-center justify-center"><div className="loading loading-spinner loading-xl"> </div> </div>;
   if (!me) return <Navigate to="/login" replace />;
   if (permission && !hasPermission(permission)) {
     return <Navigate to="/unauthorized" replace />;

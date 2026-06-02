@@ -4,6 +4,7 @@ import { REFRESH_TOKEN_MUTATION } from './graphql/mutations';
 import { getTokens, storeTokens } from './services/manageTokens';
 import i18n from './i18n';
 
+
 // --- Client pour refresh uniquement ---
 const refreshClient = new ApolloClient({
   link: new HttpLink({ uri: "http://localhost:8000/graphql/" }),
@@ -18,7 +19,7 @@ const authLink = new ApolloLink((operation, forward) => {
     headers: {
       ...headers,
       ...(tokens?.accessToken && { Authorization: `JWT ${tokens.accessToken}` }),
-      'Accept-Language': lang,   // ✅ "fr" ou "en", jamais "fr-FR"
+      'Accept-Language': lang,
     },
   }));
 
@@ -28,14 +29,15 @@ const authLink = new ApolloLink((operation, forward) => {
 const errorLink = new ErrorLink(({ error, operation,forward }) => {
   if (CombinedGraphQLErrors.is(error)) {
     error.errors.forEach(({ message }) =>{
-      if (message.includes("Unauthenticated")) {
-        apolloClient.clearStore();
-        localStorage.removeItem("me")
+      console.info("GraphQL errors detected, checking for authentication issues...");
+      if (message.includes("Unauthenticated")||message.includes("Authentication required")) {
         const _tokens = getTokens();
+        apolloClient.clearStore();
         return refreshClient.mutate({
           mutation: REFRESH_TOKEN_MUTATION,
           variables: { refreshToken: _tokens.refreshToken },
         }).then(({ data }) => {
+          localStorage.removeItem("me")
           const accessToken = data.refreshToken.token.token;
           const refreshToken = data.refreshToken.refreshToken.token;
           storeTokens(accessToken, refreshToken);
@@ -64,6 +66,8 @@ const errorLink = new ErrorLink(({ error, operation,forward }) => {
     );
   } else {
     console.error(`[Network error]: ${error}`);
+    
+    // window.location.replace("/login");
   }
 });
   return forward(operation);
