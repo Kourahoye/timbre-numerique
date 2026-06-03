@@ -5,7 +5,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import qr from "../assets/qr.svg";
 import type { MeType, Timbres } from "./types";
 import { useTranslation } from "react-i18next";
-import { RiEdit2Line } from "react-icons/ri";
+import { RiEdit2Line, RiFilePdf2Fill } from "react-icons/ri";
 import { gql } from "@apollo/client";
 import toast from "react-hot-toast";
 
@@ -150,6 +150,10 @@ export default function Profil() {
                     >
                       {t("profil.timbreLink")}
                     </button>
+                    <a href={`http://127.0.0.1:8000/${timbre.pdfFile.url}`} target="_blank" rel="noopener noreferrer" className="btn btn-ghost mt-2">
+                      <RiFilePdf2Fill className="size-5 me-2" />
+                      {t("profil.downloadPdf")}
+                    </a>
                     <dialog id={`my_modal_${timbre.id}`} className="modal">
                       <div className="modal-box">
                         <h3 className="font-bold text-lg">{t("profil.timbreLink")}</h3>

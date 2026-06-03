@@ -240,7 +240,8 @@
     "close": "Fermer",
     "firstNameRequired":"Prénom requis",
     "LastNameRequired":"Nom requis",
-    "ChangePassword":"Changer le mot de passe"
+    "ChangePassword":"Changer le mot de passe",
+    "downloadPdf":"Telecharger le pdf"
   },
 
   "scan": {
