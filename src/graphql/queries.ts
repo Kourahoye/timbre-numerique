@@ -19,6 +19,9 @@ export const MY_TIMBRE_QUERY = gql`
     id
     qrCode
     reference
+    pdfFile{
+      url
+    }
     used
     type {
       name

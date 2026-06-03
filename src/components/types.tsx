@@ -107,6 +107,9 @@ export type Timbres = {
     qrCode:string
     reference:string
     used:string
+    pdfFile:{
+      url:string
+    }
     "type":TimbreType
   }[]
 

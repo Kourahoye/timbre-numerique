@@ -237,7 +237,8 @@
     "close": "Close",
      "firstNameRequired":"First name required",
     "LastNameRequired":"Last name required",
-    "ChangePassword":"Change password"
+    "ChangePassword":"Change password",
+    "downloadPdf":"Download pdf"
   },
 
   "scan": {
