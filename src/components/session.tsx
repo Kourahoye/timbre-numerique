@@ -154,14 +154,138 @@ export default function Session() {
   return (
     <>
       <div className="min-h-screen flex flex-col gap-4 justify-center items-center bg-base-200 w-full">
-        <dialog id="add_modal" className="modal">
+        {/* <dialog id="add_modal" className="modal">
           <div className="modal-box">
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                 ✕
               </button>
-            </form>
-            <div className="p-6">
+            </form> */}
+            
+          {/* </div>
+        </dialog> */}
+        <dialog id="update_session" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">{t("session.modification")}</h3>
+            <div className="py-4">
+              <form method="post" className="space-x-2 space-y-2 flex justify-between" onSubmit={(e)=>{
+                e.preventDefault()
+                if(!currId){
+                  toast.error(`${t("session.selectSetion")}`)
+                  return
+                }
+                const form = new FormData(e.currentTarget)
+                const name = form.get("new_name") 
+                if (name == "" || name == null){
+                  toast.error(`${t("session.newName")}`)
+                }
+                const toastId = toast.loading(`${t("common.pleaseWait")}`)
+                changeName({variables:{id:currId,name:name}}).then((res)=>{
+                  if(res.data){
+                    toast.success("Changement effectuer",{id:toastId})
+                    refetch()
+                    return
+                  }
+                  if(res.error){
+                   
+                    toast.error(res.error.message,{id:toastId})
+                  }
+                }).catch((error)=>{
+                  if(error.message){
+                     if(error.message.includes("timbre_session_name_key")){
+                      toast.error(`${t("session.duplicateName")}`,{id:toastId})
+                      return
+                    }
+                    toast.error(error.message,{id:toastId})
+                  }
+                })
+              }}>
+                <input type="text" placeholder="new name" required name="new_name" className="input input-sm w-full" />
+                <button className='btn btn-sm btn-outline btn-ghost btn-info'><span>{t("common.change")}</span>
+                {
+                  changingName && <span className="loading loading-spinner loading-xs"></span>
+                }
+                </button>
+              </form>
+              <div className="divider">Default</div>
+                <form  method="post" className="space-y-2" onSubmit={(e)=>{
+                  e.preventDefault()
+                  const form = new FormData(e.currentTarget)
+                  const start =  form.get("new_start")
+                  const end =  form.get("new_end")
+                  if (start == null || start == "" || end==null || end==""){
+                    toast.error(`${t("session.fillFields")}`)
+                    return;
+                  }if(start > end){
+                    toast.error(`${t("session.startBeforeEnd")}`)
+                    return;
+                  }
+                  const toastId = toast.loading(`${t("common.pleaseWait")}`)
+                    changeDates({variables:{id:currId,start:start,end:end}}).then((res)=>{
+                      if(res.data){
+                        toast.success(`${t("session.changeSuccess")}`,{id:toastId})
+                        refetch()
+                        return
+                      }
+                      if(res.error){
+                        toast.error(res.error.message,{id:toastId})
+                      }
+                    }).catch((error)=>{
+                      if(error.message){
+                        toast.error(error.message,{id:toastId})
+                      }
+                    })
+                }}>
+                  <div className="form-control w-full ">
+                    <label className="label">
+                      <span className="label-text">{t("session.startDate")}</span>
+                    </label>
+                    <input type="date" placeholder={t("common.typeHere")} name="new_start" required className="input input-bordered w-full validator" />
+                    <p className="validator-hint"><span>{t("common.fieldRequired")}</span></p>
+                  </div>
+                  <div className="form-control w-full ">
+                    <label className="label">
+                      <span className="label-text">{t("session.endDate")}</span>
+                    </label>
+                    <input type="date" placeholder={t("common.typeHere")} name="new_end" required className="input validator input-bordered w-full " />
+                    <p className="validator-hint"><span>{t("common.fieldRequired")}</span></p>
+                  </div>
+                  <div>
+                  </div>
+                  <button className='btn btn-sm btn-outline btn-ghost btn-info'>
+                    <span>
+                      Changer
+                    </span>
+                    {
+                      changingDates && <span className="loading loading-spinner loading-sm"></span>
+                    }
+                  </button>
+                </form>
+            </div>
+            <div className="modal-action">
+              <form method="dialog">
+                <button className="btn">{t("common.save")}</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+        <div className="card bg-base-100 shadow-xl p-6 ml-4">
+          <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
+            <span>Sessions</span>
+            {/* <button
+              className="btn btn-xs btn-info btn-outline btn-ghost"
+              onClick={() => {
+                (
+                  document.getElementById(
+                    "add_modal",
+                  ) as HTMLDialogElement | null
+                )?.showModal();
+              }}
+            >
+              <RiAddLine size={20} />
+            </button> */}
+          </h1>
+          <div className="p-6 w-full">
               <h1 className="text-2xl font-bold text-center mb-4">
                 {t("session.createSession")}
               </h1>
@@ -277,129 +401,7 @@ export default function Session() {
                 </button>
               </form>
             </div>
-          </div>
-        </dialog>
-        <dialog id="update_session" className="modal">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">{t("session.modification")}</h3>
-            <div className="py-4">
-              <form method="post" className="space-x-2 space-y-2 flex justify-between" onSubmit={(e)=>{
-                e.preventDefault()
-                if(!currId){
-                  toast.error(`${t("session.selectSetion")}`)
-                  return
-                }
-                const form = new FormData(e.currentTarget)
-                const name = form.get("new_name") 
-                if (name == "" || name == null){
-                  toast.error(`${t("session.newName")}`)
-                }
-                const toastId = toast.loading(`${t("common.pleaseWait")}`)
-                changeName({variables:{id:currId,name:name}}).then((res)=>{
-                  if(res.data){
-                    toast.success("Changement effectuer",{id:toastId})
-                    refetch()
-                    return
-                  }
-                  if(res.error){
-                   
-                    toast.error(res.error.message,{id:toastId})
-                  }
-                }).catch((error)=>{
-                  if(error.message){
-                     if(error.message.includes("timbre_session_name_key")){
-                      toast.error(`${t("session.duplicateName")}`,{id:toastId})
-                      return
-                    }
-                    toast.error(error.message,{id:toastId})
-                  }
-                })
-              }}>
-                <input type="text" placeholder="new name" required name="new_name" className="input input-sm w-full" />
-                <button className='btn btn-sm btn-outline btn-ghost btn-info'><span>{t("common.change")}</span>
-                {
-                  changingName && <span className="loading loading-spinner loading-xs"></span>
-                }
-                </button>
-              </form>
-              <div className="divider">Default</div>
-                <form  method="post" className="space-y-2" onSubmit={(e)=>{
-                  e.preventDefault()
-                  const form = new FormData(e.currentTarget)
-                  const start =  form.get("new_start")
-                  const end =  form.get("new_end")
-                  if (start == null || start == "" || end==null || end==""){
-                    toast.error(`${t("session.fillFields")}`)
-                    return;
-                  }if(start > end){
-                    toast.error(`${t("session.startBeforeEnd")}`)
-                    return;
-                  }
-                  const toastId = toast.loading(`${t("common.pleaseWait")}`)
-                    changeDates({variables:{id:currId,start:start,end:end}}).then((res)=>{
-                      if(res.data){
-                        toast.success(`${t("session.changeSuccess")}`,{id:toastId})
-                        refetch()
-                        return
-                      }
-                      if(res.error){
-                        toast.error(res.error.message,{id:toastId})
-                      }
-                    }).catch((error)=>{
-                      if(error.message){
-                        toast.error(error.message,{id:toastId})
-                      }
-                    })
-                }}>
-                  <div className="form-control w-full ">
-                    <label className="label">
-                      <span className="label-text">{t("session.startDate")}</span>
-                    </label>
-                    <input type="date" placeholder={t("common.typeHere")} name="new_start" required className="input input-bordered w-full validator" />
-                    <p className="validator-hint"><span>{t("common.fieldRequired")}</span></p>
-                  </div>
-                  <div className="form-control w-full ">
-                    <label className="label">
-                      <span className="label-text">{t("session.endDate")}</span>
-                    </label>
-                    <input type="date" placeholder={t("common.typeHere")} name="new_end" required className="input validator input-bordered w-full " />
-                    <p className="validator-hint"><span>{t("common.fieldRequired")}</span></p>
-                  </div>
-                  <div>
-                  </div>
-                  <button className='btn btn-sm btn-outline btn-ghost btn-info'>
-                    <span>
-                      Changer
-                    </span>
-                    {
-                      changingDates && <span className="loading loading-spinner loading-sm"></span>
-                    }
-                  </button>
-                </form>
-            </div>
-            <div className="modal-action">
-              <form method="dialog">
-                <button className="btn">{t("common.save")}</button>
-              </form>
-            </div>
-          </div>
-        </dialog>
-        <div className="card bg-base-100 shadow-xl p-6 ml-4">
-          <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
-            <span>Sessions</span>
-            <button
-              className="btn btn-xs btn-info btn-outline btn-ghost"
-              onClick={() => {
-                (
-                  document.getElementById(
-                    "add_modal",
-                  ) as HTMLDialogElement | null
-                )?.showModal();
-              }}
-            >
-              <RiAddLine size={20} />
-            </button>
-          </h1>
+            <div className="divider"></div>
           <div className="overflow-x-auto">
             <table className="table">
               {/* head */}

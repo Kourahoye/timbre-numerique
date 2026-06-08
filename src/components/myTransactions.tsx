@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
 import { useTranslation } from "react-i18next";
-import { RiRefreshLine } from "react-icons/ri";
+import { RiEyeLine, RiRefreshLine } from "react-icons/ri";
 
 const MY_TRANSACTIONS = gql`
   query MY_TRANSACTIONS {
@@ -137,6 +137,14 @@ export default function MyTransactions() {
                           : "—"}
                       </strong>
                     </span>
+                    {
+                      transaction.status == "pending" &&
+                    <span>
+                      <a href={`/transaction/${transaction.id}`} className="link link-primary">
+                        <RiEyeLine className="inline" />
+                      </a>
+                    </span>
+                    }
                   </div>
                 </div>
 

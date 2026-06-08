@@ -9,6 +9,7 @@
     "back": "Back",
     "home": "Home",
     "search": "Search",
+    "create":"Create",
     "see": "See",
     "unexpectedError": "Unexpected error!",
     "getYours":"Get your stamp",
@@ -213,7 +214,7 @@
   },
 
   "notifications": {
-    "title": "Unread notifications",
+    "title": "Notifications",
     "markAsRead": "Mark as read",
     "showAll": "Show all notifications",
     "pleaseWait": "Please wait..",

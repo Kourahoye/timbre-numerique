@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useMutation, useLazyQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import type { DeleteTypeMutationResponse, GetTypeTimbresQuery } from "./types";
-import { RiAddLine, RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
+import {  RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
 const AddType = gql`
-  mutation AddType($name: String!) {
-    addTimreType(name: $name) {
+  mutation AddType($name: String!, $price: Int!) {
+    addTimreType(name: $name, price: $price) {
       id
       name
     }
@@ -40,8 +40,8 @@ const DELETE_TYPE = gql`
   }
 `;
 const CHANGE_TYPE_NAME = gql`
-mutation CHANGE_TYPE_NAME {
-  changeTimbreTypeName(id: 10, name: "") {
+mutation CHANGE_TYPE_NAME($id: Int!, $name: String!){
+  changeTimbreTypeName(id: $id, name: $name) {
     id
     name
   }
@@ -104,7 +104,6 @@ export default function TypeTimbre() {
               className="flex justify-between items-center space-x-2"
               onSubmit={(e)=>{
                 e.preventDefault()
-                e.preventDefault()
                 if(!currId){
                   toast.error(`${t('timbre.pickTimbreType')}`)
                   return
@@ -147,14 +146,33 @@ export default function TypeTimbre() {
             </div>
           </div>
         </dialog>
-        <dialog id="add_modal" className="modal">
+        {/* <dialog id="add_modal" className="modal">
           <div className="modal-box">
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                 ✕
               </button>
-            </form>
-            <div className="p-6">
+            </form> */}
+           
+          {/* </div>
+        </dialog> */}
+        <div className="card bg-base-100 shadow-xl p-6 ml-4">
+          <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
+            <span>{t("nav.timbreType")}</span>
+            {/* <button
+              className="btn btn-xs btn-info btn-outline btn-ghost"
+              onClick={() => {
+                (
+                  document.getElementById(
+                    "add_modal",
+                  ) as HTMLDialogElement | null
+                )?.showModal();
+              }}
+            >
+              <RiAddLine size={20} />
+            </button> */}
+          </h1>
+           <div className="p-6">
               <h1 className="text-2xl font-bold text-center mb-4">
                 {t("timbre.createType")}
               </h1>
@@ -162,13 +180,16 @@ export default function TypeTimbre() {
                 className="space-y-2"
                 onSubmit={(e) => {
                   e.preventDefault();
+                  const form = new FormData(e.currentTarget);
+                  const name = form.get("name") as string;
+                  const price = form.get("price") as string;
                   if (name.trim() === "") {
                     setError(`${t("timbre.typeNameRequired")}`);
                     return;
                   } else {
                     setError("");
                   }
-                  addType({ variables: { name: name } })
+                  addType({ variables: { name: name,price:Number.parseInt(price)||0.0 } })
                     .then(() => {
                       toast.success(`${t("timbre.createTypeSuccess")}`);
                       refetch();
@@ -193,6 +214,19 @@ export default function TypeTimbre() {
                     className="w-full"
                   />
                 </div>
+                 <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text"> {t("pricing.price")}</span>
+                </label>
+                <input
+                  inputMode="numeric"
+                  type="number"
+                  placeholder={t("common.typeHere")}
+                  name="price"
+                  required
+                  className="input input-bordered w-full"
+                />
+              </div>
                 {error && (
                   <div role="alert" className="alert alert-error">
                     <svg
@@ -222,24 +256,7 @@ export default function TypeTimbre() {
                 </button>
               </form>
             </div>
-          </div>
-        </dialog>
-        <div className="card bg-base-100 shadow-xl p-6 ml-4">
-          <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
-            <span>{t("nav.timbreType")}</span>
-            <button
-              className="btn btn-xs btn-info btn-outline btn-ghost"
-              onClick={() => {
-                (
-                  document.getElementById(
-                    "add_modal",
-                  ) as HTMLDialogElement | null
-                )?.showModal();
-              }}
-            >
-              <RiAddLine size={20} />
-            </button>
-          </h1>
+            <div className="divider"></div>
           <div className="overflow-x-auto">
             <table className="table">
               {/* head */}

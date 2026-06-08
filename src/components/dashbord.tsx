@@ -34,11 +34,15 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           navigate("/login")
         })
     }
-    const [isdark, setIsdark] = useState(
-    JSON.parse(localStorage.getItem('isdark') || 'false')
-    );
+    const [isdark, setIsdark] = useState(localStorage.getItem('isdark') || 'false');
     useEffect(() => {
-      localStorage.setItem('isdark', JSON.stringify(isdark));
+      // localStorage.setItem('isdark', JSON.stringify(isdark));
+      // console.log(isdark)
+      if(isdark =="true"){
+      document.documentElement.setAttribute("data-theme", "Slate");
+    }else{
+      document.documentElement.setAttribute("data-theme","Timbre");
+    }
     }, [isdark]);
     
 
@@ -54,7 +58,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
         <Can permission="">
         {
-          me && <li><Link className="btn btn-circle btn-soft btn-wide btn-outline btn-info uppercase" to="/profil">{me.username}</Link></li>
+          me && <li><Link className="btn btn-circle btn-soft btn-wide btn-outline btn-info uppercase tooltip tooltip-bottom tooltip-info" data-tip="Profil" to="/profil">{me.username}</Link></li>
         }
         </Can>
         <Can permission="view_dashboard_global">
@@ -63,6 +67,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
         <li>
           <a>{t('nav.authentication')}</a>
           <ul className="p-2">
+            <li><Link to="/">{t("common.home")}</Link></li>
             
                {
                 me &&
@@ -89,7 +94,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       <Can permission="scan">
       <li><Link to="/scan" >{t('nav.stamps')}</Link></li>
       </Can>
-      <Can permission="scan">
+      <Can permission="assign">
         <li><Link to="/pricing" >{t('nav.pricing')}</Link></li>
       </Can>
       
@@ -98,7 +103,10 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       </Can>
       <li>
           <label className="toggle text-base-content">
-  <input type="checkbox" value="Slate" className="theme-controller" checked={isdark} onChange={(e) => setIsdark(e.target.checked)} />
+  <input type="checkbox" value="slate" className="theme-controller" checked={isdark == "true"} onChange={(e) => {
+    setIsdark(e.target.checked ? "true" : "false")
+    localStorage.setItem('isdark', e.target.checked ? "true" : "false");
+  }} />
   <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
   <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>
 </label>
@@ -110,6 +118,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal px-1">
       {/* <li><Link to="/profil">Profil</Link></li> */}
+            <li><Link to="/">{t("common.home")}</Link></li>
       <li>
         <details>
           <summary>{t('nav.authentication')}</summary>
@@ -140,7 +149,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       <Can permission="scan">
       <li><Link to="/scan" >{t('nav.stamps')}</Link></li>
       </Can>
-      <Can permission="scan">
+      <Can permission="assign">
         <li><Link to="/pricing" >{t('nav.pricing')}</Link></li>
       </Can>
       
@@ -158,7 +167,10 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
   </div>
   <div className="navbar-end">
    <label className="toggle text-base-content not-lg:hidden">
-  <input type="checkbox" value="Slate" className="theme-controller" checked={isdark} onChange={(e) => setIsdark(e.target.checked)} />
+  <input type="checkbox" value="slate" className="theme-controller" checked={isdark == "true"} onChange={(e) => {
+    setIsdark(e.target.checked ? "true" : "false")
+    localStorage.setItem('isdark', e.target.checked ? "true" : "false");
+  }} />
   <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
   <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>
 </label>
@@ -183,8 +195,6 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
       <svg className="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
       <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
     </svg>
-
-        
       </div>
       <ul
         tabIndex={-1}
@@ -195,7 +205,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
         {me?.username != "" && <button type="button" className="btn btn-xs btn-wide btn-error btn-outline btn-ghost" onClick={()=>logoutfunc()} >{t("auth.logout")}</button>}
         </li> */}
         {
-         me && <li><Link className="btn btn-circle btn-sm btn-soft btn-wide btn-outline btn-info uppercase text-md" to="/profil">{me.username}</Link></li>
+         me && <li><Link className="btn btn-circle btn-sm btn-soft btn-wide btn-outline btn-info uppercase text-md tooltip tooltip-bottom tooltip-info" data-tip="Profil" to="/profil">{me.username}</Link></li>
        }
         <li>
         <LanguageSwitcher />

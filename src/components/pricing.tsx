@@ -159,14 +159,45 @@ export default function Price() {
 
   return (
     <>
-      <dialog id="add_pricing_modal" className="modal">
+      {/* <dialog id="add_pricing_modal" className="modal">
         <div className="modal-box">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕
             </button>
-          </form>
-          <div className="p-6">
+          </form> */}
+         
+        {/* </div> */}
+        
+                    {/* <button
+                      className="btn btn-xs btn-info btn-outline btn-ghost"
+                      onClick={() => {
+                        (
+                          document.getElementById(
+                            "add_pricing_modal",
+                          ) as HTMLDialogElement | null
+                        )?.showModal();
+                      }}
+                    >
+                      <RiAddLine size={20} />
+                    </button> */}
+      {/* // </dialog> */}
+      <div className="min-h-screen flex justify-center items-center bg-base-200 w-full">
+        <div className="card bg-base-100 shadow-xl p-6 ml-4">
+          <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
+            <section>
+              <span>{t("pricing.title")}</span>
+              {
+                plageTime == "current" &&
+              <div className="badge badge-accent badge-xs ml-2">{t("pricing.thisYear")}</div>
+            }
+              {
+                plageTime == "all" &&
+                <div className="badge badge-accent badge-xs ml-2">{t("pricing.allYears")}</div>
+              }
+            </section>
+          </h1>
+           <div className="p-6">
             <h1 className="text-2xl font-bold text-center mb-4">{t("pricing.newPrice")}</h1>
             <form
               method="post"
@@ -281,6 +312,7 @@ export default function Price() {
                   <span className="label-text"> {t("pricing.price")}</span>
                 </label>
                 <input
+                  inputMode="numeric"
                   type="number"
                   placeholder={t("common.typeHere")}
                   name="price"
@@ -299,36 +331,7 @@ export default function Price() {
               </button>
             </form>
           </div>
-        </div>
-      </dialog>
-      <div className="min-h-screen flex justify-center items-center bg-base-200">
-        <div className="card bg-base-100 shadow-xl p-6 ml-4">
-          <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
-            <section>
-              <span>{t("pricing.title")}</span>
-              {
-                plageTime == "current" &&
-              <div className="badge badge-accent badge-xs ml-2">{t("pricing.thisYear")}</div>
-            }
-              {
-                plageTime == "all" &&
-                <div className="badge badge-accent badge-xs ml-2">{t("pricing.allYears")}</div>
-              }
-            </section>
-
-            <button
-              className="btn btn-xs btn-info btn-outline btn-ghost"
-              onClick={() => {
-                (
-                  document.getElementById(
-                    "add_pricing_modal",
-                  ) as HTMLDialogElement | null
-                )?.showModal();
-              }}
-            >
-              <RiAddLine size={20} />
-            </button>
-          </h1>
+          <div className="divider"></div>
             <div className="tabs tabs-lift">
               <label className="tab">
                 <input type="radio" name={`my_tabs`} defaultChecked  onChange={()=>setPlageTime("current")} />
