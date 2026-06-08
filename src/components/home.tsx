@@ -131,6 +131,9 @@ function Home() {
                       if (error.message.includes("Authentication required")){
                         toast.error(`${t("common.loginRequired")}`);
                         return
+                      }else if(error.message.includes("does not exist")){
+                        toast.error(`${t("pricing.noPriceYear")}`);
+                        return
                       }
                       toast.error(error.message);
                     });

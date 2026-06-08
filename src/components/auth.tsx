@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const perms = data?.perms ?? [];
-
+  // console.log("User permissions:", perms);
   useEffect(() => {
     if (data?.me?.username) {
       localStorage.setItem("me", data.me.username);

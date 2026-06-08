@@ -31,7 +31,7 @@ export default function Roles() {
   return <>
     <div className="min-h-screen flex justify-center items-center bg-base-200">
       <div className="card w-96 bg-base-100 shadow-xl p-6">
-        <h2 className="text-2xl font-bold mb-4">{t("roles.Roles")}</h2>
+        <h2 className="text-2xl font-bold mb-4">{t("roles.title")}</h2>
         <form className="space-y-4" onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
@@ -73,7 +73,7 @@ export default function Roles() {
             <option value={"controller"}>{t("roles.controller")}</option>
             <option value={"user"}>{t("roles.simpleUser")}</option>
           </select>
-          <button className="btn btn-sm btn-info">{t("assignRole")}</button>
+          <button className="btn btn-sm btn-info">{t("roles.assignRole")}</button>
         </form>
       </div>
     </div>

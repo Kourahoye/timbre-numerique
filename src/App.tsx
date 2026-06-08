@@ -59,7 +59,7 @@ function App() {
             <Route
               path="/scan"
               element={
-                <ProtectedRoute permission="timbre.view_timbre">
+                <ProtectedRoute permission="timbre.scan_qr">
                   <Transaction />
                 </ProtectedRoute>
               }
@@ -95,7 +95,7 @@ function App() {
             <Route
               path="/pricing"
               element={
-                <ProtectedRoute permission="" >
+                <ProtectedRoute permission="assign" >
                   <Price />
                 </ProtectedRoute>
               }
@@ -108,14 +108,14 @@ function App() {
                   </ProtectedRoute>
                 }
                 />
-              <Route
+              {/* <Route
               path="/pricing"
               element={
                 <ProtectedRoute permission="">
                 <Price />
                 </ProtectedRoute>
               }
-              />
+              /> */}
               <Route 
                 path="/transaction/:idTranction"
                 element={

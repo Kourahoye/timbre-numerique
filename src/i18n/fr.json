@@ -12,7 +12,7 @@
     "see": "Voir",
     "unexpectedError": "Erreur imprévue !",
     "getYours":"Obtenez votre timbre",
-    "create":"Create",
+    "create":"Créer",
     "update":"Modifier",
     "typeHere":"Tapez ici",
     "change": "Changer",
@@ -216,7 +216,7 @@
   },
 
   "notifications": {
-    "title": "Notifications non lues",
+    "title": "Notifications",
     "markAsRead": "Marquer comme lu",
     "showAll": "Afficher toutes les notifications",
     "pleaseWait": "Veuillez patienter..",

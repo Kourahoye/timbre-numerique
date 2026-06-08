@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 const NEW_NOTIFICATIONS = gql`
   query NEW_NOTIFICATIONS {
     notifications {
+    title
       content
       createdAt
       id
@@ -19,6 +20,7 @@ const NEW_NOTIFICATIONS = gql`
 const NOTIFICATIONS = gql`
   query NOTIFICATIONS {
     allNotifications {
+    title
     content
     createdAt
     id
@@ -35,29 +37,22 @@ mutation MARK_ONE_AS_READ($id:Int!) {
   }
 }
 `
-export type Notifs = {
-  notifications: {
+export type Notif =  {
     content: string;
     createdAt: string;
     id: string;
     link: {
-        id:number
+        id:number;
+        link:string;
     };
     read: string;
     title:string;
-  }[];
+  }
+export type Notifs = {
+  notifications: Notif[];
 };
 export type AllNotifs = {
-  allNotifications: {
-    content: string;
-    createdAt: string;
-    id: string;
-    link: {
-        id:number
-    };
-    read: string;
-    title:string;
-  }[];
+  allNotifications: Notif[];
 };
 export default function Notifications() {
   const {t} = useTranslation();
@@ -121,7 +116,7 @@ export default function Notifications() {
                 <li key={notif.id} className={`rounded-lg border p-4 transition ${ notif.read ? "bg-white border-gray-200" : "bg-blue-50 border-blue-300"}${ notif.read ? "dark:bg-slate-800 dark:border-gray-900" : "dark:bg-blue-900 dark:border-blue-950"}`}>
                 <div className="flex justify-between space-x-2 space-y-2 items-start mb-1">
                     <h3 className="font-medium text-gray-900">
-                                 {notif.content}
+                                 {notif.title || "Titre non défini"}
                              </h3>
                               <span className="text-xs text-gray-500">
                                  {new Date(notif.createdAt).toLocaleDateString()}
@@ -129,6 +124,7 @@ export default function Notifications() {
                         </div>
                         <p className="text-sm text-gray-700">
                              { notif.content }
+                              {notif.link && notif.link.link && <a href={notif.link.link} target="_blank" className="ml-2 text-blue-600 hover:underline">{notif.link.link}</a>}
                         </p>
                         <div  className="mt-3  flex justify-between items-end">
                         {   !notif.read &&
@@ -162,7 +158,7 @@ export default function Notifications() {
                             </form>
                             }
                             {
-                                notif.link && <Link to={`/transaction/${notif.link.id}`} type="button" onClick={()=>markasread({variables:{id:Number.parseInt(notif.id)}}).then(()=>{refetch()})} className="btn btn-sm btn-outline btn-info btn-ghost items-center"><span>{t("common.see")}</span> <RiEyeLine className="inline" /></Link>
+                                notif.link && notif.link.id && <Link to={`/transaction/${notif.link.id}`} type="button" onClick={()=>markasread({variables:{id:Number.parseInt(notif.id)}}).then(()=>{refetch()})} className="btn btn-sm btn-outline btn-info btn-ghost items-center"><span>{t("common.see")}</span> <RiEyeLine className="inline" /></Link>
                             }
                             </div>
                 </li>
@@ -173,7 +169,7 @@ export default function Notifications() {
                 <li className={`rounded-lg border p-4 transition ${ notif.read ? "bg-white border-gray-200" : "bg-blue-50 border-blue-300"}${ notif.read ? "dark:bg-slate-800 dark:border-gray-900" : "dark:bg-blue-900 dark:border-blue-950"}`}>
                 <div className="flex justify-between space-x-2 space-y-2 items-start mb-1">
                     <h3 className="font-medium text-gray-900">
-                                 {notif.content}
+                                 {notif.title || "Titre non défini"}
                              </h3>
                               <span className="text-xs text-gray-500">
                                  {new Date(notif.createdAt).toLocaleDateString()}
@@ -181,6 +177,7 @@ export default function Notifications() {
                         </div>
                         <p className="text-sm text-gray-700">
                              { notif.content }
+                             {notif.link && notif.link.link && <a href={notif.link.link} target="_blank" className="ml-2 text-blue-600 hover:underline">{notif.link.link}</a>}
                         </p>
                         <div className="mt-3 flex justify-between items-end">
 
@@ -215,7 +212,7 @@ export default function Notifications() {
                             </form>
                         }
                         {
-                            notif.link && <Link to={`/transaction/${notif.link.id}`} type="button" onClick={()=>markasread({variables:{id:Number.parseInt(notif.id)}}).then(()=>{refetch()})} className="btn btn-sm btn-outline btn-info btn-ghost items-center"><span>{t("common.see")}</span> <RiEyeLine className="inline" />  </Link>
+                            notif.link && notif.link.id && <Link to={`/transaction/${notif.link.id}`} type="button" onClick={()=>markasread({variables:{id:Number.parseInt(notif.id)}}).then(()=>{refetch()})} className="btn btn-sm btn-outline btn-info btn-ghost items-center"><span>{t("common.see")}</span> <RiEyeLine className="inline" />  </Link>
                         }
                         </div>
                 </li>

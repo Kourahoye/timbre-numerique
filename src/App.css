@@ -2,11 +2,11 @@
 @plugin "daisyui";
 
 @custom-variant dark (&:where(
-  [data-theme=Slate],
+  [data-theme="Slate"],
 ));
 
 @plugin "daisyui" {
-  themes: slate,Timbre --default,desk;
+  themes: Slate,Timbre --default,Desk;
 };
 
 @plugin "daisyui/theme" {
@@ -45,7 +45,7 @@
 };
 
 @plugin "daisyui/theme" {
-  name: "desk";
+  name: "Desk";
   default: false;
   prefersdark: false;
   color-scheme: "light";
