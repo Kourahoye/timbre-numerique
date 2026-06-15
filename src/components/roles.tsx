@@ -29,8 +29,8 @@ export default function Roles() {
     });
   const [assign_role] = useMutation(SET_ROLE);
   return <>
-    <div className="min-h-screen flex justify-center items-center bg-base-200">
-      <div className="card w-96 bg-base-100 shadow-xl p-6">
+    <div className="min-h-screen flex justify-center items-center max-w-6xl mx-auto">
+      <div className="card w-96 bg-base-100 shadow-xl p-6 glass">
         <h2 className="text-2xl font-bold mb-4">{t("roles.title")}</h2>
         <form className="space-y-4" onSubmit={(e) => {
           e.preventDefault();

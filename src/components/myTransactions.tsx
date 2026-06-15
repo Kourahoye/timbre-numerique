@@ -7,18 +7,19 @@ const MY_TRANSACTIONS = gql`
   query MY_TRANSACTIONS {
     myTransactions {
       timbre {
-       type{
-    name
-    } price {
-        price
-      }
+        type {
+          name
+        }
+        price {
+          price
+        }
         reference
         id
         ownedBy {
           username
         }
       }
-   
+
       controller {
         username
       }
@@ -56,12 +57,13 @@ export type TranscList = {
   }[];
 };
 export default function MyTransactions() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
+  const me = localStorage.getItem("me");
   const { loading, error, data, refetch } =
     useQuery<TranscList>(MY_TRANSACTIONS);
   return (
     <>
-      <div className="min-h-screen flex flex-col gap-4 justify-center items-center bg-base-200 w-full">
+      <div className="min-h-screen flex flex-col gap-4 justify-center items-center max-w-6xl mx-auto">
         {loading && (
           <span className="loading loading-spinner loading-lg"></span>
         )}
@@ -84,89 +86,100 @@ export default function MyTransactions() {
             <RiRefreshLine onClick={refetch} />
           </div>
         )}
-        {data && data.myTransactions.length == 0 ? <div className="text-xl font-mono text-center">Aucune transaction</div>  : (
-          <ul className="list bg-base-100 rounded-box shadow-md">
+        {data && data.myTransactions.length == 0 ? (
+          <div className="text-xl font-mono text-center">
+            Aucune transaction
+          </div>
+        ) : (
+          <ul className="list bg-base-100 rounded-box shadow-md glass">
             <li className="p-4 pb-2 text-xs opacity-60 tracking-widest uppercase font-semibold">
               {t("transaction.myTransactions")}
             </li>
 
-            {data && data.myTransactions.map((transaction) => (
-              <li key={transaction.id} className="list-row">
-                {/* Avatar / QR icon */}
-                <div className="list-col-grow-0">
-                  <div className="bg-base-200 rounded-box w-10 h-10 flex items-center justify-center text-lg">
-                    🔖
-                  </div>
-                </div>
-
-                {/* Infos principales */}
-                <div className="list-col-grow">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold">
-                      {transaction.timbre.reference}
-                    </span>
-                    <span
-                      className={`badge badge-sm ${
-                        transaction.status === "accepted"
-                          ? "badge-success"
-                          : transaction.status === "pending"
-                            ? "badge-warning"
-                            : "badge-error"
-                      }`}
-                    >
-                      {transaction.status}
-                    </span>
+            {data &&
+              data.myTransactions.map((transaction) => (
+                <li key={transaction.id} className="list-row">
+                  {/* Avatar / QR icon */}
+                  <div className="list-col-grow-0">
+                    <div className="bg-base-200 rounded-box w-10 h-10 flex items-center justify-center text-lg">
+                      🔖
+                    </div>
                   </div>
 
-                  <div className="text-sm opacity-60 flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                    <span>
-                      {t("timbre.type")} :
-                      <strong>{transaction.timbre.type?.name ?? "—"}</strong>
-                    </span>
-                    <span>
-                      {t("transaction.owner")} :
-                      <strong>
-                        {transaction.timbre.ownedBy?.username ?? "—"}
-                      </strong>
-                    </span>
-                    <span>
-                      {t("transaction.amount")} :
-                      <strong>
-                        {transaction.timbre.price
-                          ? `${transaction.timbre.price.price}`
-                          : "—"}
-                      </strong>
-                    </span>
-                    {
-                      transaction.status == "pending" &&
-                    <span>
-                      <a href={`/transaction/${transaction.id}`} className="link link-primary">
-                        <RiEyeLine className="inline" />
-                      </a>
-                    </span>
-                    }
-                  </div>
-                </div>
+                  {/* Infos principales */}
+                  <div className="list-col-grow">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">
+                        {transaction.timbre.reference}
+                      </span>
+                      <span
+                        className={`badge badge-sm ${
+                          transaction.status === "accepted"
+                            ? "badge-success"
+                            : transaction.status === "pending"
+                              ? "badge-warning"
+                              : "badge-error"
+                        }`}
+                      >
+                        {transaction.status}
+                      </span>
+                        {transaction.status == "pending" &&
+                        transaction.timbre.ownedBy.username == me && (
+                          <span>
+                            <a
+                              href={`/transaction/${transaction.id}`}
+                              className="link link-primary"
+                            >
+                              <RiEyeLine className="inline text-xl text-blue-600" />
+                            </a>
+                          </span>
+                        )}
+                    </div>
 
-                {/* Statut utilisé */}
-                <div className="list-col-grow-0 flex flex-col items-center gap-1">
-                  {transaction.timbre.used ? (
-                    <span
-                      className="status status-error status-lg"
-                      aria-label={t("timbre.used")}
-                    />
-                  ) : (
-                    <span
-                      className="status status-success status-lg"
-                      aria-label={t("timbre.available")}
-                    />
-                  )}
-                  <span className="text-xs opacity-50">
-                    {transaction.timbre.used ? t("timbre.used") : t("timbre.used")}
-                  </span>
-                </div>
-              </li>
-            ))}
+                    <div className="text-sm opacity-60 flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                      <span>
+                        {t("timbre.type")} :
+                        <strong>{transaction.timbre.type?.name ?? "—"}</strong>
+                      </span>
+                      <span>
+                        {t("transaction.owner")} :
+                        <strong>
+                          {transaction.timbre.ownedBy?.username ?? "—"}
+                        </strong>
+                      </span>
+                      <span>
+                        {t("transaction.amount")} :
+                        <strong>
+                          {transaction.timbre.price
+                            ? `${transaction.timbre.price.price}`
+                            : "—"}
+                        </strong>
+                      </span>
+                  
+                    </div>
+                  </div>
+
+                  {/* Statut utilisé */}
+                  <div className="list-col-grow-0 flex flex-col items-center gap-1">
+                    {transaction.timbre.used ? (
+                      <span
+                        className="status status-error status-lg"
+                        aria-label={t("timbre.used")}
+                      />
+                    ) : (
+                      <span
+                        className="status status-success status-lg"
+                        aria-label={t("timbre.available")}
+                      />
+                    )}
+                    <span className="text-xs opacity-50">
+                      {transaction.timbre.used
+                        ? t("timbre.used")
+                        : t("timbre.used")}
+                    </span>
+                  </div>
+                </li>
+              ))}
           </ul>
         )}
       </div>

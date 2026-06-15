@@ -140,9 +140,9 @@ export default function Profil() {
         {data != undefined && (
           <div className="card bg-base-100 shadow-xl p-6 xl:col-span-3 w-full">
             <h1 className="font-bold text-3xl">{t("profil.myTimbres")}</h1>
-            <div className="flex space-x-2 space-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 space-x-2 space-y-2">
               {loading2 && (
-                <div className="w-20 h-20 flex justify-center items-center m-auto">
+                <div className="w-20 h-20 flex justify-center items-center m-auto gap-2">
                   <span className="loading loading-spinner loading-lg"></span>
                 </div>
               )}
@@ -158,7 +158,7 @@ export default function Profil() {
                     key={timbre.id}
                     className="card w-96 bg-base-100 shadow-xl p-6"
                   >
-                    <h2 className="text-2l font-bold mb-2">
+                    <h2 className="text-xl uppercase font-bold mb-2">
                       {timbre.type.name}
                     </h2>
                     <p>
@@ -166,6 +166,12 @@ export default function Profil() {
                         {t("timbre.reference")}:{" "}
                       </span>
                       {timbre.reference}
+                    </p>
+                    <p>
+                      <span className="font-semibold text-xl">
+                        {t("session.createdAt")}:{" "}
+                      </span>
+                      {new Date(timbre.createdAt).toLocaleDateString()}
                     </p>
                     <p>
                       <span className="font-semibold text-xl">
@@ -195,7 +201,7 @@ export default function Profil() {
                       {t("profil.downloadPdf")}
                     </a>
                     <dialog id={`my_modal_${timbre.id}`} className="modal">
-                      <div className="modal-box">
+                      <div className="modal-box glass">
                         <h3 className="font-bold text-lg">
                           {t("profil.timbreLink")}
                         </h3>
@@ -218,7 +224,7 @@ export default function Profil() {
                           <div className="tab-content bg-base-100 border-base-300 p-6">
                             <p className="py-4 flex items-center justify-center">
                               <QRCodeCanvas
-                                value={`https://swimmer-bullwhip-rearview.ngrok-free.dev/scan/${timbre.qrCode}`}
+                                value={`https://swimmer-bullwhip-rearview.ngrok-free.dev/scan/${timbre.reference}`}
                                 size={256}
                               />
                             </p>
@@ -233,7 +239,7 @@ export default function Profil() {
                             </span>
                           </label>
                           <div className="tab-content bg-base-100 border-base-300 p-6">
-                            {t("profil.code")}: {timbre.qrCode}
+                            {t("profil.code")}: {timbre.reference}
                           </div>
                         </div>
                         <div className="modal-action">
@@ -250,7 +256,7 @@ export default function Profil() {
         )}
       </div>
       <dialog id="edit_profil" className="modal">
-        <div className="modal-box">
+        <div className="modal-box glass">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕
@@ -290,14 +296,16 @@ export default function Profil() {
             >
               <div className="form-control w-full flex items- justify-between gap-4">
                 <label className="label">
-                  <span className="label-text">{t("profil.firstName")}</span>
+                  <span className="label-text dark:text-white">
+                    {t("profil.firstName")}
+                  </span>
                 </label>
                 <input
                   type="text"
                   name="firt_name"
                   required
                   placeholder={t("common.typeHere")}
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-full dark:placeholder-white"
                 />
                 <button
                   type="submit"
@@ -344,14 +352,16 @@ export default function Profil() {
             >
               <div className="form-control w-full flex items-center justify-between gap-4">
                 <label className="label">
-                  <span className="label-text">{t("profil.lastName")}</span>
+                  <span className="label-text dark:text-white">
+                    {t("profil.lastName")}
+                  </span>
                 </label>
                 <input
                   type="text"
                   name="last_name"
                   required
                   placeholder={t("common.typeHere")}
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-full dark:placeholder-white"
                 />
                 <button
                   type="submit"
@@ -369,13 +379,13 @@ export default function Profil() {
         </div>
       </dialog>
       <dialog id="change_password" className="modal">
-        <div className="modal-box">
+        <div className="modal-box glass">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕
             </button>
           </form>
-          <h3 className="font-bold text-lg">Hello!</h3>
+          <h3 className="font-bold text-lg">Modification!</h3>
           <div className="py-4">
             <form
               className="flex flex-col gap-4"
@@ -428,21 +438,21 @@ export default function Profil() {
                 name="old_password"
                 required
                 placeholder={t("auth.oldPassword")}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:placeholder-white"
               />
               <input
                 type="password"
                 name="new_password1"
                 required
                 placeholder={t("auth.newPassword1")}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:placeholder-white"
               />
               <input
                 type="password"
                 name="new_password2"
                 required
                 placeholder={t("auth.newPassword2")}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:placeholder-white"
               />
               <button
                 type="submit"

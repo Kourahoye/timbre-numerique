@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useMutation, useLazyQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import type { DeleteTypeMutationResponse, GetTypeTimbresQuery } from "./types";
-import {  RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
+import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
@@ -40,23 +40,24 @@ const DELETE_TYPE = gql`
   }
 `;
 const CHANGE_TYPE_NAME = gql`
-mutation CHANGE_TYPE_NAME($id: Int!, $name: String!){
-  changeTimbreTypeName(id: $id, name: $name) {
-    id
-    name
+  mutation CHANGE_TYPE_NAME($id: Int!, $name: String!) {
+    changeTimbreTypeName(id: $id, name: $name) {
+      id
+      name
+    }
   }
-}
 `;
 
 export default function TypeTimbre() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [error, setError] = useState("");
   const [addType, { loading: load }] = useMutation(AddType);
   const [name, setName] = useState("");
-  const [loadTypeTimbre, { called, loading, data, refetch }] = useLazyQuery<GetTypeTimbresQuery>(GET_TYPE_TIMBRES);
+  const [loadTypeTimbre, { called, loading, data, refetch }] =
+    useLazyQuery<GetTypeTimbresQuery>(GET_TYPE_TIMBRES);
   const [deleteTimbreType] = useMutation(DELETE_TYPE);
-  const [currId,setCurrId]=useState<number|null>()
-  const [changeName,{loading:changingName}] = useMutation(CHANGE_TYPE_NAME);
+  const [currId, setCurrId] = useState<number | null>();
+  const [changeName, { loading: changingName }] = useMutation(CHANGE_TYPE_NAME);
   const deleteType = (id: number) => {
     Swal.fire({
       title: `${t("confirm.areYouSure")}`,
@@ -65,7 +66,7 @@ export default function TypeTimbre() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText:`${t("confirm.yesDelete")}`,
+      confirmButtonText: `${t("confirm.yesDelete")}`,
     }).then(async (result) => {
       if (!result.isConfirmed) return;
       const toastId = toast.loading(`${t("common.pleaseWait")}`);
@@ -88,75 +89,86 @@ export default function TypeTimbre() {
 
   useEffect(() => {
     loadTypeTimbre();
-  },[]);
+  }, []);
 
   return (
     <>
-      <div className="min-h-screen flex flex-col gap-4 justify-center items-center bg-base-200 w-full">
+      <div className="min-h-screen flex flex-col gap-4 justify-center items-center max-w-6xl mx-auto">
         <dialog id="update_type_timbre" className="modal">
-          <div className="modal-box">
+          <div className="modal-box glass">
             <form method="dialog">
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                ✕
+              </button>
             </form>
             <h3 className="font-bold text-lg">{t("timbre.modifyType")}</h3>
             <div className="py-4">
-              <form method="post" 
-              className="flex justify-between items-center space-x-2"
-              onSubmit={(e)=>{
-                e.preventDefault()
-                if(!currId){
-                  toast.error(`${t('timbre.pickTimbreType')}`)
-                  return
-                }
-                const form = new FormData(e.currentTarget)
-                const name = form.get("new_name") 
-                if (name == "" || name == null){
-                  toast.error("Donnez le nouveau nom")
-                }
-                const toastId = toast.loading(`${t("common.pleaseWait")}`)
-                changeName({variables:{id:currId,name:name}}).then((res)=>{
-                  if(res.data){
-                    toast.success("Changement effectuer",{id:toastId})
-                    refetch()
-                    return
+              <form
+                method="post"
+                className="flex justify-between items-center space-x-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!currId) {
+                    toast.error(`${t("timbre.pickTimbreType")}`);
+                    return;
                   }
-                  if(res.error){
-                    toast.error(res.error.message,{id:toastId})
+                  const form = new FormData(e.currentTarget);
+                  const name = form.get("new_name");
+                  if (name == "" || name == null) {
+                    toast.error("Donnez le nouveau nom");
                   }
-                }).catch((error)=>{
-                  if(error.message){
-                    toast.error(error.message,{id:toastId})
-                  }
-                })
-              }}
+                  const toastId = toast.loading(`${t("common.pleaseWait")}`);
+                  changeName({ variables: { id: currId, name: name } })
+                    .then((res) => {
+                      if (res.data) {
+                        toast.success("Changement effectuer", { id: toastId });
+                        refetch();
+                        return;
+                      }
+                      if (res.error) {
+                        toast.error(res.error.message, { id: toastId });
+                      }
+                    })
+                    .catch((error) => {
+                      if (error.message) {
+                        toast.error(error.message, { id: toastId });
+                      }
+                    });
+                }}
               >
                 <div className="form-control w-full">
-                  <input type="text" placeholder={t("common.typeHere")} name="new_name" required className="input input-sm validator input-bordered w-full" />
+                  <input
+                    type="text"
+                    placeholder={t("common.typeHere")}
+                    name="new_name"
+                    required
+                    className="input input-sm validator input-bordered w-full"
+                  />
                 </div>
-                <button className="btn btn-info btn-outline btn-ghost btn-sm" type="submit">
-                  <span>
-                    {t("common.update")}
-                  </span>
-                  {
-                    changingName && <span className="loading loading-spinner loading-sm"></span>
-                  }
+                <button
+                  className="btn btn-info btn-outline btn-ghost btn-sm"
+                  type="submit"
+                >
+                  <span>{t("common.update")}</span>
+                  {changingName && (
+                    <span className="loading loading-spinner loading-sm"></span>
+                  )}
                 </button>
               </form>
-
             </div>
           </div>
         </dialog>
         {/* <dialog id="add_modal" className="modal">
-          <div className="modal-box">
+          <div className="modal-box glass">
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                 ✕
               </button>
             </form> */}
-           
-          {/* </div>
+
+        {/* </div>
         </dialog> */}
-        <div className="card bg-base-100 shadow-xl p-6 ml-4">
+        <div className="card bg-base-100 shadow-xl p-6 ml-4 glass">
           <h1 className="text-2xl font-bold text-center mb-4 flex justify-between">
             <span>{t("nav.timbreType")}</span>
             {/* <button
@@ -172,51 +184,59 @@ export default function TypeTimbre() {
               <RiAddLine size={20} />
             </button> */}
           </h1>
-           <div className="p-6">
-              <h1 className="text-2xl font-bold text-center mb-4">
-                {t("timbre.createType")}
-              </h1>
-              <form
-                className="space-y-2"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const form = new FormData(e.currentTarget);
-                  const name = form.get("name") as string;
-                  const price = form.get("price") as string;
-                  if (name.trim() === "") {
-                    setError(`${t("timbre.typeNameRequired")}`);
-                    return;
-                  } else {
-                    setError("");
-                  }
-                  addType({ variables: { name: name,price:Number.parseInt(price)||0.0 } })
-                    .then(() => {
-                      toast.success(`${t("timbre.createTypeSuccess")}`);
-                      refetch();
-                    })
-                    .catch((err) => {
-                      if (err.message.includes("timbre_typetimbre.name")) {
-                        setError(`${t("timbre.typeExists")}`);
-                        return;
-                      }
-                      setError(err.message);
-                    });
-                }}
-              >
-                <div className="input w-full">
-                  <input
-                    required
-                    type="text"
-                    value={name}
-                    name="name"
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Type de timbre"
-                    className="w-full"
-                  />
-                </div>
-                 <div className="form-control w-full">
+          <div className="p-6">
+            <h1 className="text-2xl font-bold text-center mb-4">
+              {t("timbre.createType")}
+            </h1>
+            <form
+              className="space-y-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const form = new FormData(e.currentTarget);
+                const name = form.get("name") as string;
+                const price = form.get("price") as string;
+                if (name.trim() === "") {
+                  setError(`${t("timbre.typeNameRequired")}`);
+                  return;
+                } else {
+                  setError("");
+                }
+                addType({
+                  variables: {
+                    name: name,
+                    price: Number.parseInt(price) || 0.0,
+                  },
+                })
+                  .then(() => {
+                    toast.success(`${t("timbre.createTypeSuccess")}`);
+                    refetch();
+                  })
+                  .catch((err) => {
+                    if (err.message.includes("timbre_typetimbre.name")) {
+                      setError(`${t("timbre.typeExists")}`);
+                      return;
+                    }
+                    setError(err.message);
+                  });
+              }}
+            >
+              <div className="input w-full">
+                <input
+                  required
+                  type="text"
+                  value={name}
+                  name="name"
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Type de timbre"
+                  className="w-full"
+                />
+              </div>
+              <div className="form-control w-full">
                 <label className="label">
-                  <span className="label-text"> {t("pricing.price")}</span>
+                  <span className="label-text dark:text-white">
+                    
+                    {t("pricing.price")}
+                  </span>
                 </label>
                 <input
                   inputMode="numeric"
@@ -227,36 +247,36 @@ export default function TypeTimbre() {
                   className="input input-bordered w-full"
                 />
               </div>
-                {error && (
-                  <div role="alert" className="alert alert-error">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="stroke-current shrink-0 h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <span>{error}</span>
-                  </div>
+              {error && (
+                <div role="alert" className="alert alert-error">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="stroke-current shrink-0 h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>{error}</span>
+                </div>
+              )}
+              <button
+                className="btn btn-sm btn-info btn-outline btn-ghost w-full mt-4"
+                type="submit"
+              >
+                {t("common.create")}
+                {load && (
+                  <span className="loading loading-sm loading-spinner"></span>
                 )}
-                <button
-                  className="btn btn-sm btn-info btn-outline btn-ghost w-full mt-4"
-                  type="submit"
-                >
-                  {t("common.create")}
-                  {load && (
-                    <span className="loading loading-sm loading-spinner"></span>
-                  )}
-                </button>
-              </form>
-            </div>
-            <div className="divider"></div>
+              </button>
+            </form>
+          </div>
+          <div className="divider"></div>
           <div className="overflow-x-auto">
             <table className="table">
               {/* head */}
@@ -264,7 +284,7 @@ export default function TypeTimbre() {
                 <tr>
                   <th>#</th>
                   <th>{t("session.name")}</th>
-                   <th>{t("session.createdAt")}</th>
+                  <th>{t("session.createdAt")}</th>
                   <th>{t("session.updatedAt")}</th>
                   <th>{t("session.createdBy")}</th>
                   <th>{t("session.updatedBy")}</th>
@@ -281,7 +301,10 @@ export default function TypeTimbre() {
                 )}
                 {called && data && data?.getTimbresType.length === 0 && (
                   <tr>
-                    <td className="text-xl font-mono text-center font-semibold" colSpan={6}>
+                    <td
+                      className="text-xl font-mono text-center font-semibold"
+                      colSpan={6}
+                    >
                       {t("session.noType")}
                     </td>
                   </tr>
@@ -306,14 +329,19 @@ export default function TypeTimbre() {
                             className="text-error cursor-pointer"
                           />
                         </button>
-                         <button className="btn btn-sm btn-warning btn-outline btn-ghost" onClick={() => {
-                          setCurrId(Number.parseInt(type.id));
-                           (
-                               document.getElementById(
-                               "update_type_timbre",
-                           ) as HTMLDialogElement | null
-                           )?.showModal();
-                          }} ><RiEditLine /> </button>
+                        <button
+                          className="btn btn-sm btn-warning btn-outline btn-ghost"
+                          onClick={() => {
+                            setCurrId(Number.parseInt(type.id));
+                            (
+                              document.getElementById(
+                                "update_type_timbre",
+                              ) as HTMLDialogElement | null
+                            )?.showModal();
+                          }}
+                        >
+                          <RiEditLine />
+                        </button>
                       </td>
                     </tr>
                   ))}

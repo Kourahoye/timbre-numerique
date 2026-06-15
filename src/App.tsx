@@ -27,137 +27,129 @@ function App() {
     <>
       <ApolloProvider client={apolloClient}>
         <AuthProvider>
-
-        <Dashboard>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/profil"
-              element={
-                <ProtectedRoute>
-                  <Profil />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/scan/:qr"
-              element={
-                <ProtectedRoute permission="timbre.view_timbre">
-                  <Transaction />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/scan"
-              element={
-                <ProtectedRoute permission="timbre.scan_qr">
-                  <Transaction />
-                </ProtectedRoute>
-              }
-            />
-            {/* <Route path="/scan" element={<QRScanner />} /> */}
-            <Route
-              path="/timbre-type"
-              element={
-                <ProtectedRoute>
-                  <TypeTimbre />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/unauthorized" element={<Forbiden />} />
-            <Route path="*" element={<NotFound />} />
-            <Route path="/404" element={<NotFound />} />
-            <Route
-              path="/roles"
-              element={
-                <ProtectedRoute permission="manage_users">
-                  <Roles />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/sessions"
-              element={
-                <ProtectedRoute permission="add_session">
-                  <Session />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/pricing"
-              element={
-                <ProtectedRoute permission="assign" >
-                  <Price />
-                </ProtectedRoute>
-              }
+          <Dashboard>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
               />
-              <Route 
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/profil"
+                element={
+                  <ProtectedRoute>
+                    <Profil />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/scan/:qr"
+                element={
+                  <ProtectedRoute permission="timbre.view_timbre">
+                    <Transaction />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/scan"
+                element={
+                  <ProtectedRoute permission="timbre.scan_qr">
+                    <Transaction />
+                  </ProtectedRoute>
+                }
+              />
+              {/* <Route path="/scan" element={<QRScanner />} /> */}
+              <Route
+                path="/timbre-type"
+                element={
+                  <ProtectedRoute>
+                    <TypeTimbre />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/unauthorized" element={<Forbiden />} />
+              <Route path="*" element={<NotFound />} />
+              <Route path="/404" element={<NotFound />} />
+              <Route
+                path="/roles"
+                element={
+                  <ProtectedRoute permission="manage_users">
+                    <Roles />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/sessions"
+                element={
+                  <ProtectedRoute permission="add_session">
+                    <Session />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/pricing"
+                element={
+                  <ProtectedRoute permission="assign">
+                    <Price />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/notifications"
                 element={
                   <ProtectedRoute permission="">
                     <Notifications />
                   </ProtectedRoute>
                 }
-                />
-              {/* <Route
-              path="/pricing"
-              element={
-                <ProtectedRoute permission="">
-                <Price />
-                </ProtectedRoute>
-              }
-              /> */}
-              <Route 
+              />
+              <Route
                 path="/transaction/:idTranction"
                 element={
                   <ProtectedRoute permission="">
                     <FindTransaction />
                   </ProtectedRoute>
                 }
-                /> <Route 
+              />{" "}
+              {/* <Route
                 path="/transaction"
                 element={
                   <ProtectedRoute permission="">
                     <FindTransaction />
                   </ProtectedRoute>
                 }
-                /> 
-                <Route 
+              /> */}
+              <Route
                 path="/mytransactions"
                 element={
-                <ProtectedRoute permission="">
+                  <ProtectedRoute permission="">
                     <MyTransactions />
-                </ProtectedRoute>
+                  </ProtectedRoute>
                 }
-                />
-                <Route 
+              />
+              <Route
                 path="/dashboard"
                 element={
-                <ProtectedRoute permission="">
+                  <ProtectedRoute permission="view_dashboard_minimal">
                     <DashboardInfo />
-                </ProtectedRoute>
+                  </ProtectedRoute>
                 }
-                />
-                <Route 
+              />
+              <Route
                 path="/dashboard-full"
                 element={
                   <ProtectedRoute permission="">
                     <DashboardFull />
                   </ProtectedRoute>
                 }
-                />
-          </Routes>
-        </Dashboard>
-          </AuthProvider>
+              />
+            </Routes>
+          </Dashboard>
+        </AuthProvider>
       </ApolloProvider>
     </>
   );

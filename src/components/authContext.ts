@@ -1,8 +1,8 @@
 // src/auth/AuthContext.ts  ← pas de .tsx, pas de JSX
 import { createContext, useContext } from "react";
 
-type Me = { id: string; username: string; isActive: boolean; };
-type Perm = { id: string; name: string; };
+type Me = { id: string; username: string; isActive: boolean };
+type Perm = { id: string; name: string };
 
 export type AuthContextType = {
   me: Me | null;

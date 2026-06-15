@@ -26,6 +26,7 @@ export const MY_TIMBRE_QUERY = gql`
     type {
       name
     }
+    createdAt
   }
 }
 `;

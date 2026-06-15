@@ -110,7 +110,8 @@ export type Timbres = {
     pdfFile:{
       url:string
     }
-    "type":TimbreType
+    "type":TimbreType,
+    createdAt:string
   }[]
 
 }

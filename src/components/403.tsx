@@ -31,7 +31,7 @@ export default function Forbiden() {
       <h2 className="text-2xl font-bold mt-4">Acces bolquer</h2>
 
       <p className="text-gray-500 mt-2 max-w-md">
-       Vous n'avez pas le droit d'acceder à cette page
+        Vous n'avez pas le droit d'acceder à cette page
       </p>
 
       {/* ASCII */}

@@ -19,7 +19,18 @@
     "fieldRequired":"Ce champ est requis",
     "refresh":"↺ Actualiser",
     "total":"Total timbres",
-    "loginRequired":"Authentification requise"
+    "loginRequired":"Authentification requise",
+     "simplifySteps": "Simplifiez vos démarches administratives grâce au timbre numérique. Achetez votre timbre en ligne, effectuez votre paiement en toute sécurité et recevez instantanément votre justificatif électronique.",
+    "quickPurchase": "Achat rapide en quelques clics",
+    "securePayment": "Paiement sécurisé",
+    "mobileCompatible": "Compatible mobile et ordinateur",
+    "qrVerification": "Vérification par QR Code",
+    "howItWorks": "Comment ça marche ?",
+    "selectStampType": "Sélectionnez le type de timbre",
+    "checkAmount": "Consultez le montant à payer",
+    "receiveStamp": "Recevez instantanément votre timbre numérique",
+    "presentQRCode": "Présentez votre QR Code lors de vos démarches",
+    "qrCodeInfo": "Scannez le QR code pour vérifier l'authenticité de votre timbre"
   },
 
   "nav": {
@@ -36,7 +47,8 @@
     "language": "Langue",
     "selectLanguage": "Choisir la langue",
     "roles":"Gestion des rôles",
-     "stamps":"Consomer Timbre"
+     "stamps":"Consomer Timbre",
+     "Dashboard-perso":"Tableau de bord perso"
   },
 
   "auth": {
@@ -61,9 +73,70 @@
     "users":"Utilisateurs",
     "oldPassword":"Ancien mot de passe", 
     "newPassword1":"Nouveau mot de passe", 
-    "newPassword2":"Confirmer nouveau mot de passe"
+    "newPassword2":"Confirmer nouveau mot de passe",
+    "welcomeBack":"Bon retour",
+    "forgotPassword":"Mot de passe oublié",
+    "secureLogin":"Connexion securisé",
+    "or":"ou",
+    "loggingIn":"Connexion",
+    "joinUs":"Rejoignez nous",
+    "joinCommunity":"joignez la communauté"
   },
 
+   "payment": {
+    "pay": "Payer",
+    "securePayment": "Paiement sécurisé",
+    "stampType": "Type timbre",
+    "paymentMethod": "Mode de paiement",
+    "chooseMethod": "Choisissez comment vous souhaitez payer",
+    "continue": "Continuer",
+    "back": "Retour",
+    "validate": "Valider",
+    "verifying": "Vérification…",
+    "enterPhoneNumber": "Entrez votre numéro de téléphone",
+    "enterCardInfo": "Entrez les informations de votre carte",
+    "expiry": "Expiration",
+    "cardHolder": "Titulaire de la carte",
+    "cardHolderPlaceholder": "PRÉNOM NOM",
+    "confirmationCode": "Code de confirmation",
+    "resendCode": "Renvoyer le code",
+    "secureTransaction": "Transaction sécurisée par Djomy. Vos données sont chiffrées et protégées.",
+    "paymentInitiated": "Paiement initié !",
+    "paymentInitiatedMessage": "Votre paiement de {{amount}} a été initié avec succès.",
+    "waitingConfirmation": "En attente de confirmation",
+    "confirm": "Confirmer",
+    "method": "Méthode",
+    "amount": "Montant",
+    "reference": "Référence",
+    "close": "Fermer",
+    "paymentFailed": "Paiement échoué !",
+    "paymentFailedMessage": "Votre paiement de {{amount}} a échoué.",
+    "securedBy": "Sécurisé par Djomy • Chiffrement SSL 256-bit",
+    "methods": {
+      "orangeMoney": "Orange Money",
+      "mtnMoney": "MTN Mobile Money",
+      "visaMastercard": "Visa / Mastercard",
+      "paycard": "PayCard",
+      "orangePlaceholder": "Ex: 6XX XXX XXX",
+      "mtnPlaceholder": "Ex: 6XX XXX XXX",
+      "cardPlaceholder": "XXXX XXXX XXXX XXXX",
+      "paycardPlaceholder": "Numéro PayCard",
+      "orangeLabel": "Numéro Orange Money",
+      "mtnLabel": "Numéro MTN MoMo",
+      "cardLabel": "Numéro de carte",
+      "paycardLabel": "Numéro PayCard"
+    },
+    "errors": {
+      "selectMethod": "Veuillez sélectionner un mode de paiement.",
+      "invalidCardNumber": "Numéro de carte invalide.",
+      "invalidExpiry": "Date d'expiration invalide.",
+      "invalidCvv": "CVV invalide.",
+      "cardHolderRequired": "Nom du titulaire requis.",
+      "invalidPhone": "Numéro de téléphone invalide.",
+      "invalidOtp": "Veuillez entrer le code OTP complet.",
+      "paymentError": "Une erreur est survenue lors du paiement."
+    }
+  },
   "errors": {
     "403": {
       "code": "403",
@@ -218,6 +291,7 @@
   "notifications": {
     "title": "Notifications",
     "markAsRead": "Marquer comme lu",
+    "markall": "Tout marquer comme lu",
     "showAll": "Afficher toutes les notifications",
     "pleaseWait": "Veuillez patienter..",
      "notifications":"Notifications",

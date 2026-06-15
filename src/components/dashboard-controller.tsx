@@ -58,19 +58,17 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 p-5 transition-all duration-300 hover:border-zinc-600 hover:bg-zinc-800/60">
+    <div className="group relative overflow-hidden rounded-2xl border border-zinc-800 dark:border-white bg-base-100 p-5 transition-all duration-300 hover:border-zinc-600 hover:bg-base-200/60">
       <div
         className={`absolute inset-x-0 top-0 h-0.5 ${accent ?? "bg-zinc-700"}`}
       />
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-zinc-500">
+      <p className="text-[11px] font-semibold uppercase tracking-widest">
         {label}
       </p>
-      <p className="mt-2 font-mono text-3xl font-bold tracking-tight text-zinc-100">
+      <p className="mt-2 font-mono text-3xl font-bold tracking-tight">
         {value}
       </p>
-      {sub && (
-        <p className="mt-1 text-xs text-zinc-500">{sub}</p>
-      )}
+      {sub && <p className="mt-1 text-xs">{sub}</p>}
     </div>
   );
 }
@@ -90,8 +88,8 @@ function TransactionBar({
   const rPct = 100 - pPct - aPct;
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-zinc-500">
+    <div className="rounded-2xl border border-zinc-800 dark:border-white bg-base-100 p-5">
+      <p className="text-[11px] font-semibold uppercase tracking-widest">
         Transactions
       </p>
 
@@ -112,16 +110,35 @@ function TransactionBar({
 
       <div className="mt-4 grid grid-cols-3 gap-2">
         {[
-          { label: "En attente", value: pending, color: "text-amber-400", dot: "bg-amber-400" },
-          { label: "Acceptées",  value: accepted, color: "text-emerald-400", dot: "bg-emerald-400" },
-          { label: "Rejetées",   value: rejected, color: "text-rose-500", dot: "bg-rose-500" },
+          {
+            label: "En attente",
+            value: pending,
+            color: "text-amber-400",
+            dot: "bg-amber-400",
+          },
+          {
+            label: "Acceptées",
+            value: accepted,
+            color: "text-emerald-400",
+            dot: "bg-emerald-400",
+          },
+          {
+            label: "Rejetées",
+            value: rejected,
+            color: "text-rose-500",
+            dot: "bg-rose-500",
+          },
         ].map(({ label, value, color, dot }) => (
           <div key={label} className="flex flex-col gap-1">
             <div className="flex items-center gap-1.5">
               <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-              <span className="text-[10px] uppercase tracking-wider text-zinc-500">{label}</span>
+              <span className="text-[10px] uppercase tracking-wider">
+                {label}
+              </span>
             </div>
-            <span className={`font-mono text-xl font-bold ${color}`}>{value}</span>
+            <span className={`font-mono text-xl font-bold ${color}`}>
+              {value}
+            </span>
           </div>
         ))}
       </div>
@@ -129,33 +146,31 @@ function TransactionBar({
   );
 }
 
-function UsageRing({
-  used,
-  total,
-}: {
-  used: number;
-  total: number;
-}) {
+function UsageRing({ used, total }: { used: number; total: number }) {
   const pct = total > 0 ? (used / total) * 100 : 0;
   const r = 36;
   const circ = 2 * Math.PI * r;
   const dash = (pct / 100) * circ;
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-zinc-500">
+    <div className="rounded-2xl border border-zinc-800 dark:border-white bg-base-100 p-5">
+      <p className="text-[11px] font-semibold uppercase tracking-widest">
         Utilisation des timbres
       </p>
       <div className="mt-4 flex items-center gap-5">
         <svg width="90" height="90" viewBox="0 0 90 90">
           <circle
-            cx="45" cy="45" r={r}
+            cx="45"
+            cy="45"
+            r={r}
             fill="none"
             stroke="#27272a"
             strokeWidth="7"
           />
           <circle
-            cx="45" cy="45" r={r}
+            cx="45"
+            cy="45"
+            r={r}
             fill="none"
             stroke="#a78bfa"
             strokeWidth="7"
@@ -165,7 +180,8 @@ function UsageRing({
             className="transition-all duration-700"
           />
           <text
-            x="45" y="45"
+            x="45"
+            y="45"
             textAnchor="middle"
             dominantBaseline="central"
             className="fill-zinc-100 font-mono text-sm font-bold"
@@ -176,12 +192,14 @@ function UsageRing({
         </svg>
         <div className="flex flex-col gap-2">
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-zinc-500">Utilisés</p>
-            <p className="font-mono text-xl font-bold text-violet-400">{used}</p>
+            <p className="text-[10px] uppercase tracking-wider">Utilisés</p>
+            <p className="font-mono text-xl font-bold text-violet-400">
+              {used}
+            </p>
           </div>
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-zinc-500">Disponibles</p>
-            <p className="font-mono text-xl font-bold text-zinc-300">{total - used}</p>
+            <p className="text-[10px] uppercase tracking-wider">Disponibles</p>
+            <p className="font-mono text-xl font-bold ">{total - used}</p>
           </div>
         </div>
       </div>
@@ -191,11 +209,11 @@ function UsageRing({
 
 function SessionBadge({ session }: { session: ActiveSession | null }) {
   return (
-    <div className="flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-800/60 px-3 py-1.5">
+    <div className="flex items-center gap-2 rounded-full border border-zinc-700 dark:border-white bg-base-200/60 px-3 py-1.5">
       <span
         className={`h-2 w-2 rounded-full ${session ? "bg-emerald-400 shadow-[0_0_6px_#34d399]" : "bg-zinc-600"}`}
       />
-      <span className="text-xs font-medium text-zinc-300">
+      <span className="text-xs font-medium ">
         {session ? `Session active — ${session.name}` : "Aucune session active"}
       </span>
     </div>
@@ -207,7 +225,7 @@ function SessionBadge({ session }: { session: ActiveSession | null }) {
 function Skeleton({ className }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse rounded-2xl bg-zinc-800/60 ${className ?? ""}`}
+      className={`animate-pulse rounded-2xl bg-base-200/60 ${className ?? ""}`}
     />
   );
 }
@@ -230,25 +248,23 @@ export default function DashboardInfo() {
   const s = data?.dashboardStats;
 
   return (
-    <div className="min-h-screen bg-zinc-950 px-6 py-8 font-sans text-zinc-100">
-      <div className="mb-8 flex items-start justify-between">
+    <div className="min-h-screen max-w-6xl mx-auto px-6 py-8 font-sans">
+      <div className="mb-8 flex items-start justify-between glass p-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-100">
-            Tableau de bord
-          </h1>
-          <p className="mt-1 text-sm text-zinc-500">
-            Vue d'ensemble — données en temps réel
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">Tableau de bord</h1>
+          <p className="mt-1 text-sm">Vue d'ensemble — données en temps réel</p>
         </div>
         <div className="flex items-center gap-3">
           {s && <SessionBadge session={s.activeSession} />}
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="rounded-full border border-zinc-700 bg-zinc-800 px-4 py-1.5 text-xs font-medium text-zinc-300 transition hover:bg-zinc-700 disabled:opacity-40"
+            className="rounded-full border border-zinc-700 dark:border-white bg-base-200 px-4 py-1.5 text-xs font-medium  transition hover:bg-base-200 disabled:opacity-40"
           >
-            <span className={refreshing ? "animate-spin inline-block" : ""}>↺</span>
-            {" "}Actualiser
+            <span className={refreshing ? "animate-spin inline-block" : ""}>
+              ↺
+            </span>{" "}
+            Actualiser
           </button>
         </div>
       </div>
@@ -271,7 +287,7 @@ export default function DashboardInfo() {
         ) : s ? (
           <>
             <StatCard
-              label="Revenus totaux"
+              label="Mes Revenus"
               value={`${s.totalRevenue.toLocaleString("fr-FR", { minimumFractionDigits: 0 })} GNF`}
               sub="Timbres utilisés uniquement"
               accent="bg-gradient-to-r from-violet-500 to-indigo-500"
@@ -286,7 +302,9 @@ export default function DashboardInfo() {
               label="Notifications non lues"
               value={s.unreadNotifications}
               sub="Pour l'utilisateur connecté"
-              accent={s.unreadNotifications > 0 ? "bg-amber-400" : "bg-zinc-700"}
+              accent={
+                s.unreadNotifications > 0 ? "bg-amber-400" : "bg-zinc-700"
+              }
             />
           </>
         ) : null}
