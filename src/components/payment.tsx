@@ -1072,12 +1072,7 @@ export default function DjomyPaymentModal({
                     <br />
                     <span>
                       {t("payment.waitingConfirmation")}:
-                      <a
-                        href={lien}
-                        className="btn btn-sm btn-info btn-outline btn-ghost"
-                      >
-                        {t("payment.confirm")}
-                      </a>
+                   
                     </span>
                   </div>
 
@@ -1151,7 +1146,13 @@ export default function DjomyPaymentModal({
                       </span>
                     </div>
                   </div>
-
+                  <div className="flex gap-4 w-full items-center justify-center">
+                      <a
+                        href={lien}
+                        className="btn btn-wide btn-info btn-outline btn-ghost"
+                      >
+                        {t("payment.confirm")}
+                  </a>
                   <button
                     className="djomy-btn-primary"
                     style={{
@@ -1162,6 +1163,8 @@ export default function DjomyPaymentModal({
                   >
                     {t("payment.close")}
                   </button>
+                  </div>
+                
                 </div>
               )}
 

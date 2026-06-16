@@ -106,7 +106,7 @@ export type Timbres = {
     id:string
     qrCode:string
     reference:string
-    used:string
+    used:boolean
     pdfFile:{
       url:string
     }

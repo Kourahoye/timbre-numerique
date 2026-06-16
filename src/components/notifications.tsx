@@ -80,10 +80,10 @@ export default function Notifications() {
       called,
     },
   ] = useLazyQuery<AllNotifs>(NOTIFICATIONS);
-  const [markasread] = useMutation<{
+  const [markasread,{loading:marking}] = useMutation<{
     markAsRead: { message: string; success: boolean };
   }>(MARK_ONE_AS_READ);
-  const [markallasread] = useMutation<{
+  const [markallasread,{loading:markingAll}] = useMutation<{
     markAllAsRead: { message: string; success: boolean };
   }>(MARK_ALL_AS_READ);
 
@@ -139,10 +139,21 @@ export default function Notifications() {
                 <button
                   className="btn btn-xs btn-outline btn-info btn-ghost"
                   onClick={() => {
-                    markallasread();
+                    markallasread().then(()=>{
+                      if (called){
+                        refecthAll();
+                        return
+                      } 
+                      refetch()
+                    });
                   }}
                 >
-                  {t("notifications.markall")}
+                  <span>
+                    {t("notifications.markall")}
+                  </span>
+                  {
+                    markingAll && <span className="loading loading-spinner loading-xs"></span>
+                  }
                 </button>
               )}
             </li>
@@ -212,7 +223,12 @@ export default function Notifications() {
                             type="submit"
                             className="text-xs text-blue-600 hover:underline"
                           >
-                            {t("notifications.markAsRead")}
+                              <span>
+                              {t("notifications.markAsRead")}
+                            </span>
+                              {
+                    marking && <span className="loading loading-spinner loading-xs"></span>
+                  }
                           </button>
                         </form>
                       )}
@@ -303,7 +319,12 @@ export default function Notifications() {
                             type="submit"
                             className="text-xs text-blue-600 hover:underline"
                           >
-                            {t("notifications.markAsRead")}
+                              <span>
+                              {t("notifications.markAsRead")}
+                            </span>
+                              {
+                    marking && <span className="loading loading-spinner loading-xs"></span>
+                  }
                           </button>
                         </form>
                       )}

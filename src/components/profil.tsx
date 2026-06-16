@@ -5,7 +5,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import qr from "../assets/qr.svg";
 import type { MeType, Timbres } from "./types";
 import { useTranslation } from "react-i18next";
-import { RiEdit2Line, RiFilePdf2Fill } from "react-icons/ri";
+import { RiEdit2Line, RiFilePdf2Fill, RiShareBoxLine } from "react-icons/ri";
 import { gql } from "@apollo/client";
 import toast from "react-hot-toast";
 
@@ -158,14 +158,37 @@ export default function Profil() {
                     key={timbre.id}
                     className="card w-96 bg-base-100 shadow-xl p-6"
                   >
-                    <h2 className="text-xl uppercase font-bold mb-2">
-                      {timbre.type.name}
+                    <h2 className="text-xl uppercase font-bold mb-2 flex justify-between">
+                      <span>
+                        {timbre.type.name}
+                      </span>
+                        <span>
+                        {(() => {
+                          const created = new Date(timbre.createdAt);
+                          const today = new Date();
+
+                          return ((
+                            (created.getDate() === today.getDate() &&
+                            created.getMonth() === today.getMonth() &&
+                            created.getFullYear() === today.getFullYear()) || (
+                              (created.getMonth() - today.getMonth())  == 0 &&
+                              (created.getFullYear() - today.getFullYear()) == 0 &&
+                              (created.getDate() - today.getDate()) >= 3
+                            )) && !timbre.used
+                          );
+                        })() && (
+                          <div className="badge badge-info gap-2 badge-xs">
+                            New
+                          </div>
+                        )}
+                      </span>
                     </h2>
                     <p>
                       <span className="font-semibold text-xl">
                         {t("timbre.reference")}:{" "}
                       </span>
-                      {timbre.reference}
+                      <span>{timbre.reference}</span>
+                    
                     </p>
                     <p>
                       <span className="font-semibold text-xl">
@@ -179,7 +202,8 @@ export default function Profil() {
                       </span>
                       {timbre.used ? t("timbre.usedYes") : t("timbre.usedNo")}
                     </p>
-                    <button
+                    <div className="flex items-center justify-between">
+                      <button
                       className="btn"
                       onClick={() => {
                         (
@@ -189,6 +213,7 @@ export default function Profil() {
                         )?.showModal();
                       }}
                     >
+                      <RiShareBoxLine />
                       {t("profil.timbreLink")}
                     </button>
                     <a
@@ -200,6 +225,7 @@ export default function Profil() {
                       <RiFilePdf2Fill className="size-5 me-2" />
                       {t("profil.downloadPdf")}
                     </a>
+                    </div>
                     <dialog id={`my_modal_${timbre.id}`} className="modal">
                       <div className="modal-box glass">
                         <h3 className="font-bold text-lg">
@@ -221,7 +247,7 @@ export default function Profil() {
                               {t("profil.qrCode")}
                             </span>
                           </label>
-                          <div className="tab-content bg-base-100 border-base-300 p-6">
+                          <div className="tab-content border-base-300 p-6 glass">
                             <p className="py-4 flex items-center justify-center">
                               <QRCodeCanvas
                                 value={`https://swimmer-bullwhip-rearview.ngrok-free.dev/scan/${timbre.reference}`}
@@ -238,7 +264,7 @@ export default function Profil() {
                               {t("profil.textCode")}
                             </span>
                           </label>
-                          <div className="tab-content bg-base-100 border-base-300 p-6">
+                          <div className="tab-content border-base-300 p-6">
                             {t("profil.code")}: {timbre.reference}
                           </div>
                         </div>
